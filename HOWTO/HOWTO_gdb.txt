@@ -3,7 +3,7 @@ $gdb -q <symbol_file>
 (gdb) core-file <core_file_name>
 
 // break points
-(gdb) b <function-name|line-number>
+(gdb) b <function-name|line-number> if <condition>          // condition ex:  arg == N
 (gdb) delete <breakpoint-number>
 (gdb) clear <function-name>
 
