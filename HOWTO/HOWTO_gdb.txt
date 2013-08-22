@@ -2,11 +2,23 @@ $gdb -q <symbol_file>
 
 (gdb) core-file <core_file_name>
 
+// break points
+(gdb) b <function-name|line-number>
+(gdb) delete <breakpoint-number>
+(gdb) clear <function-name>
+
 (gdb) info threads
 
 (gdb) thread N
 
+// backtrace
 (gdb) bt
+(gdb) bt full              // Print values of local variables.
+
+// list 
+(gdb) list <function-name>
+
+(gdb) c                    // continue
 
 (gdb) frame M
 
@@ -15,8 +27,14 @@ $gdb -q <symbol_file>
 
 (gdb) set print pretty on
 
+//print
 (gdb) p *struct_ptr
-
+(gdb) p/x variable	        // hex.
+(gdb) p/d variable	        // Signed integer.
+(gdb) p/u variable	        // unsigned integer.
+(gdb) p/c variable	        // char
+(gdb) p/f variable	        // floating number
+    
 
 ===========================================
 $gdb -q
