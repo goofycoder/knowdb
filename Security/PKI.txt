@@ -1,0 +1,106 @@
+==============================================
+Keywords
+    - PKI
+        - CA
+        - RA 
+        - Digital Certificate (X.509 v3 digital certificate)
+            - root certificate (self-signed certificate)
+            
+        - Diffie Hellman
+        
+    - LDAP
+    - ASN.1 (BER, DER)
+    - X.509
+    - DNS
+    
+
+=============================================
+
+ASyntax Notation One (ASN.1) 
+    - a standard and notation that describes rules and structures for representing, encoding and decoding data in computer networking
+    - standard ASN.1 encoding rules include:
+        * Basic Encoding Rules (BER)
+        * Distinguished Encoding Rules (DER)
+        * etc
+
+Distinguished Encoding Rules (DER)
+    - DER uses a pattern of type-length-value (TLV) triplets
+        30 — type tag indicating SEQUENCE
+        02 — type tag indicating INTEGER
+        16 — type tag indicating IA5String 
+
+X.509
+    - an ITU-T standard for a public key infrastructure (PKI) 
+    - specifies
+        * standard formats for public key certificates
+        * certificate revocation lists
+        * attribute certificates
+        * a certification path validation algorithm
+        * etc
+    - Strict hierarchical system of certificate authorities (CAs) for issuing the certificates.
+
+Structure of Digital Certificate
+    - The structure is expressed in a formal language (ASN.1) 
+    - The structure of an X.509 v3 digital certificate is as follows:
+        * Certificate
+            - Version
+                * v1,v2,v3
+            - Serial Number
+                * MUST be unique for each certificate issued by a specific CA
+            - Algorithm ID
+            - Issuer
+                * identifies the entity that has signed and issued the certificate.  
+                * MUST contain a non-empty distinguished name (DN).
+            - Validity
+                * Not Before
+                * Not After
+            - Subject
+                * identifies the entity associated with the public key stored in the subject public key field.
+                * most important part is usually  common name (CN),
+                    - as this is the part that must match the host being authenticated. 
+            - Subject Public Key Info
+                * Public Key Algorithm
+                * Subject Public Key
+            - Issuer Unique Identifier (optional)
+            - Subject Unique Identifier (optional)
+            - Extensions (optional)
+                * provide methods for:
+                    - associating additional attributes with users or public keys
+                    - managing relationships between CAs
+            - Certificate Signature Algorithm
+            - Certificate Signature
+                * created using CA's private key <==> CA signed this cert
+
+Self-signed certificate (root certificates, top-level cert)
+    - the issuer and subject are the same
+    - the highest-ranking CA's certificate can't be attested by some other higher CA (there being none), and so that certificate can only be "self-signed." 
+    - Such certificates are also termed root certificates.
+    - Self-signed certificates cannot (by nature) be revoked
+    - *usually stored by browsers 
+    - globally trusted certificate that can sign anything (as there are no constraints in 'Basic Constraints' section),
+
+Certification Authority (CA) 
+    - issues a certificate binding a public key to a particular distinguished nam
+    - indicate the revocation status of the certificates that they issue
+        * by CRL, OCSP (Online Certificate Status Protocol), etc. 
+        * CA is usually CRL issuer, but it can delegate this to different entity
+    - CAs are third parties and require both parties to trust the CA
+
+RA (registration authority)
+    - an optional system to which CA delegates certain management functions
+
+Architectual weakness of PKI
+    - Revocation of root certificates not addressed
+    - Use of blacklisting invalid certificates (using CRLs and OCSP) instead of whitelisting
+    - CRLs are particularly poor because of size and distribution patterns
+    
+Certificate revocation list (CRL).  
+    - a time-stamped list identifying revoked certificates that is signed by a CA or CRL issuer
+    - made freely available in a public repository.
+    - Each revoked certificate is identified in a CRL by its certificate serial number.
+
+How to validate the certificate?
+    - check the certificate signature and validity 
+    - acquire a suitably recent CRL and checks that the certificate serial number is not on that CRL. 
+
+LDAP
