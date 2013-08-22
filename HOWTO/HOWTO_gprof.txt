@@ -1,0 +1,9 @@
+HOWTO: run gprof
+
+1. add '-pg' to both compile and link flag
+
+2. compile the code
+
+3. run the executable, by default, it generates gmon.out file
+
+4. $gprof ./<executable> gmon.out > output_file         // interpret the gprof result in gmon.out file
