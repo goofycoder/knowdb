@@ -1,0 +1,93 @@
+class
+    - a way of encapsulating data
+    - a way of defining abstract data types along with initialization conditions and operations allowed on that data
+    - a way of hiding the implementation (hiding the guts & exposing the skin); 
+    - a way of sharing behavior and characteristics
+
+The differences between a C struct and a C++ struct?
+    - C struct is just a way of combining data together; 
+    - C struct only has characteristics (the data) and does not include behavior 
+        (functions may use the structure but are not tied up to it)  
+    - C structs can't have static members or member functions
+    - A C++ struct is actually a class, the difference being that default member and base class access specifiers are different: 
+        * class defaults to private whereas struct defaults to public.
+        
+
+private, public and protected access specifiers
+    - public: 
+        * member variables and methods with this access specifier can be directly accessed from outside the class
+    - private
+        * member variables and methods with this access specifier cannot be directly accessed from outside the class
+    - protected: 
+        * member variables and methods with this access specifier cannot be directly accessed from outside the class 
+          with the exception of child classes
+
+
+const vs. #define
+    - A constant has a scope in C++, just like a regular variable
+        #define are globally available and may clash
+
+public and private inheritance
+    - Public inheritance 
+        * "default" inheritance mechanism in C++ and 
+        * specified by the public keyword before the base class
+            class B : public A { };
+        * public inheritance means that public/private/protected accessible members inherited from Basse class stay public/private/protected in Derived class;    
+            -  the members maintain their access specifiers
+    - Private inheritance 
+        * specified the private keyword before the base class or omitting it completely, as private is the default specifier in C++
+            class B : private A { };  or  class B : A { };
+        * all the base class members, regardless of their access specifiers, become private in the derived class
+            - you won't be able to access public members of the base class through the derived one
+    - Relationship between the base and derived class:
+            - public inheritance models "is a" relation
+            - private inheritance models "is implemented in terms of" relation (object composition)
+            
+For a class MyClass { }; what default methods will the compiler generate?
+    - Default constructor with no parameters
+    - Destructor
+    - Copy constructor 
+    - Assignment operator
+        * Rule of Four. All are generated with the public access specifier
+    - class MyClass {
+      public:
+          MyClass();                        // default constructor
+          ~MyClass();                       // default destructor
+          MyClass(const MyClass& mc);       // copy constructor
+          MyClass& operator=(const MyClass& mc);      // assignment operator
+      };    
+
+How to force the compiler not to generate the above mentioned methods?
+    - Declare and define them yourself 
+        * Default no-parameters constructor will not be generated if the class has at least one constructor with parameters declared and defined.
+    - Declare them private
+        * disallow calls from the outside of the class and DO NOT define them (do not provide method bodies for them) 
+        * disallow calls from member and friend functions; such a call will generate a linker error.
+
+Default copy ctor and assignment operator
+    - perform memberwise copy construction/assignment of the *non-static* data members of the class
+    - If references or constant data members are involved in the definition of the class,
+       assignment operator is not generated (you have to define and declare your own as needed)
+       
+differences between new & malloc
+    - new" is aware of constructors/destructors; "malloc" is not
+    
+Virtual functions?
+    - represent the mechanism through which C++ implements the OO concept of polymorphism. 
+    - allow to redefine derived class functions from the base class with altered behavior so that you can call the right function for the right object 
+        * (allow to perform the right operation for an object through only a pointer/reference to that object's base class)
+    - A virtual function must be defined for the class in which it is first declared
+    - The redefinition of a virtual function in a derived class is called 
+        * overriding (complete rewrite)
+        * augmentation (rewrite but with a call to the base class function)
+    - dynamic binding
+        * Through virtual functions, C++ achieves what is called late binding (dynamic binding or runtime binding)
+            * Connect a function call to a function body at runtime based on the type of the object
+            * not at compilation time (static binding)
+            
+abstract class
+    - obtain an abstract class in C++ by declaring at least one pure virtual function in that class. 
+    - A virtual function is transformed in a pure virtual with the help of the initializer "= 0". 
+    - A pure virtual function does not need a definition. 
+    - An abstract class cannot be instantiated but only used as a base in a hierarchy
+    - A derivation from an abstract class must implement all the pure virtuals, otherwise it transforms itself into an abstract class

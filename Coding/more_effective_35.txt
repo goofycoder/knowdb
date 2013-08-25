@@ -1,0 +1,57 @@
+===================== ITEM 1 ==================================
+Difference between Reference and Pointer
+/*
+    Reference           
+        - must be initialized, must refer to an object
+            * more efficient to use, no need to test the validity of a reference before use        
+        - ALWAYS refer to the object with which it is initialized
+    
+    Pointer:
+        - could be unitialized, valid but risky
+            * always need to test against NULL before use
+        - may be reassigned to refer to different objects
+
+    use REFERENCE when
+        - you know you have something to refer to 
+        - you never want to refer something else once initialized
+        - implementing operator []
+            * so a[2] = 3 won't be writen as *a[2] = 3 
+        
+
+ */ 
+
+string &rs;     // Error; Reference must be initialized
+
+===================== ITEM 2 ==================================
+Prefer C++-style casts to C-style cast
+
+Reason:
+    - C-style cast could cast
+        * struct to int
+        * double to pointer
+        
+        
+       
+static_cast()
+    - static_case<type>()
+    
+const_cast()
+
+dynamic_cast()
+
+reinterpret_cast()
+
+
+int num_1, num_2;
+double res = (double)num_1/num_2;                   // C-style cast 
+double res = static_cast<double>(num_1) / num_2     // C++ style cast
+
+
+===================== ITEM 3 ==================================
+Never treat array polymorphically
+
+arr[i] is same as *(arr+i)
+
+The memory location of i_th object is arr + i*sizeof(an_object_in_arr);
+
+==================== ITEM 5 ====================================

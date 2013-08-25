@@ -1,0 +1,31 @@
+================================== Item 1 =====================================
+C++ is a federation of languages
+
+C does not have
+    - template:   generic programming
+    - exception
+    - overloading
+    
+================================== Item 2 =====================================
+Prefer const, enum, inline to #define (Prefer compiler to preprocessor)
+
+#define PI 3.14     // PI is not seen by compiler, does not enter symbol table
+
+- enum hack:
+
+class Player 
+{
+private: 
+    enum {NumOfTurns=5};        // enum hack
+    int score[NumOfTurns];
+};
+
+- enum is more like #define than 'const' does
+    * you can take address of 'const', but not for 'enum' or '#define'
+
+
+================================= Misc ========================================
+pass by reference to const
+
+template <typename T> 
+inline foo();                   
