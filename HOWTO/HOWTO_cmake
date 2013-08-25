@@ -1,0 +1,6 @@
+=============================================================
+Q: How to enable symbols for GDB?
+
+A: cmake -DCMAKE_BUILD_TYPE=Debug <path>
+
+Example:  cmake -DCMAKE_BUILD_TYPE=Debug .
