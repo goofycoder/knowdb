@@ -1,0 +1,27 @@
+====================================
+h3. # HOWTO: add/remove default gateway?
+$ip route           // display the route (including default gateway)
+
+$sudo route add default gw <ip_of_dflt_gw>        // add default gateway
+
+$sudo route del default gw <ip_of_dflt_gw>        // remove default gateway
+
+
+====================================
+h3. # How to check the glibc version:
+$ldd --version
+     http://www.ibm.com/developerworks/linux/library/l-linux-kernel/
+     
+====================================
+h3. # How to search the string case-insensitive in the current directory and its sub-directory 
+$grep -r -i "abc" .
+     // -i:  --ignore-case
+     
+====================================
+h3. # How to show cpu info
+$ lscpu    
+
+====================================
+h3. # How to add alias of command
+Add the following to ~/.bashrc
+    alias ll='ls -l'
