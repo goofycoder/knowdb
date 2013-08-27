@@ -1,4 +1,20 @@
 ==============================================
+Digital Signing process
+    - Input:  
+        1. signer's private key (k_pv)
+        2. message to be signed (m)
+        3. signature algorithm (E)
+    - Output:
+        Signature (s)
+    -  s = E(m, k_pv)
+    
+Signature Verifciation process
+    - Receive message (m) along with the signature (s)
+    - Receiver uses the sender's public key (k_pb) to calculate the signature
+        m' = D(s, k_pb)
+    - if (m == m') then the receiver verifies the message (m) comes from sender    
+    
+==============================================
 Keywords
     - PKI
         - CA
