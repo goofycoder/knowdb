@@ -1,0 +1,132 @@
+What happened after typing URL
+	1. mapping system translates URL to IP addr of edge server that serves the content
+		* the selection of edge server is based on historic data and global network and server conditions
+		* choose a server located close to user
+	2. the edge server may need to request content from an original server
+		* e.g.: the dynamic content on a web page that is customized for each user
+	3. transport system is used to fetch the content from orignal server
+
+Port
+    - purely an abstraction
+    - typically implemented as message queue
+        * UDP protocol 
+
+Transport-layer protocol (End-to-end protocol)
+        
+TCP
+    - byte-oriented protocol   
+        * Sender writes byte into a TCP connection, the receiver reads bypes out of TCP connection
+    - Segment:
+        * Packets exchanged btwn TCP peers
+
+UDP
+    - simple demultiplexer
+    - best-effort services
+    
+TCP vs UDP
+	- The overhead in negotiating for a TCP socket and handshaking the TCP packets is huge.  
+		* no appreciable UDP overhead
+	- UDP application
+		* a dropped packet is not such a big deal; immediate send through of the data packet matters..
+		* SNMP (Simple network Management Protocol) , DNS (Domain Name System) where data packets arriving out 
+		   of order, unreliability and not of concern
+		* System "heartbeat" or "I'm alive" messages. Missing one isn't a crisis.
+		* video streaming and especially VoIP (e.g. Skype). 
+		* UDP is useful for broadcasting information in a publish-subscribe kind of application. 
+			- multicast traffic: UDP can be multicasted to multiple hosts whereas TCP cannot do this at all
+			- TCP works with only unicast
+	    * UDP's stateless nature is also useful for servers answering small queries from huge numbers of clients.
+	    * Unlike TCP, UDP is compatible with 
+	        - packet broadcast (sending to all on local network) and 
+	        - multicasting (send to all subscribers).
+		* Another case is when data can be lost because newer data coming in will replace that previous data/state. 
+		    - Weather data, video streaming, a stock quotation service (not used for actual trading), or gaming data
+
+How to choose TCP or UDP
+	-- use TCP
+		* bulk data transfer (file transfer).
+			- Reason: windowed flow control, congestion avoidance and slow-start of TCP
+	-- use UDP
+		* simple reqeuest-reply application (error detection must be built into application)
+			- DNS resolver, weather data inquiry, stock quotation ...
+			- flow control is not an issue for reasonably sized requests and responses
+		* must be used for broadcast and multicast applications
+    
+HTTPS
+	-- run HTTP over SSL(Secure Socket Layer)
+
+socket options
+	** -- level: SOL_SOCKET (17 options)
+	SO_RCVBUF, SO_SNDBUF
+			-- the size of rcvbuf limmites the window that tcp can ads to the other end (flow control)
+			-- UDP has no flow control
+			-- buffer size = bandwidth * RTT
+				For example, if your ping time is 50 ms, and the end-to-end network consists of all 1G or 10G Ethernet, 
+				the TCP buffers should be: .05 sec * (1 Gbit / 8 bits) = 6.25 MBytes.
+			-- the max window size is 65535bytes (since the 16-bit AD_Window field in tcp header\
+				* but the window size can be extended by the window-scale option (left shift 0-14 bits)
+	SO_RCVLOWAT && SO_SNDLOWAT:  send and rcv buffer low water mark
+			-- used by select()
+			-- the amount of data in the rcv buffer for select() to return "readable"
+			-- default: 2048 bytes for TCP
+	SO_RCVTIMEO && SO_SNDTIMEO
+			-- place a timeout on socket receives and sends
+	SO_KEEPALIVE:	if no data exchanged for 2 hours in either direction, TCP automatically sends keep-alive msg to peers
+			-- for TCP socket
+			-- if get RST from peer: peer host crashed and rebooted
+			-- if did not get response from peer after total 9 tries: peer host crashes or network failure 
+				(socket returns ETIMEOUT and ICMP message is EHOSTUNREACH
+	SO_REUSEADDR && SO_REUSEPORT
+			-- allow a listening server to start and bind() the previously used port even if the previous established connections exist
+	SO_LINGER:	specify how close() operates for a connection-oriented protocol
+			-- default: send the remaining data in send buffer after close() returns
+			-- could set to: abort the connection and discard the data still in the sending buffer and send RST to peer
+	SO_BROADCAST:	enable and disable the ability of the process to send broadcast messages
+			-- only datagram sockets
+	SO_DONTROUTE: specify the outgoing packets to bypass the normal routing mechanisms of the underlying  protocol
+	        -- equivalent: sed MSG_DONTROUTE in send(), sendto() and sendmsg()
+	**-- IPv4 socket options: level: IPPROTO_IP
+	IP_HDRINCL:	build complete IP header yourself and overwrite the IP header kernel built for u
+		-- used in traceroute
+	IP_TOS:		set the Type-Of-Service field in IP header
+	IP_TTL:	set and fetch the default TTL
+		-- TTL default is 64
+	**-- TCP socket options
+	TCP_MAXSEG: allow to fetch or set the MSS for a TCP connection
+	TCP_NODELAY: if set, disable TCP's nagle algorithm
+		-- by default it's enabled
+
+Nagle algorithm
+	-- purpose: reduce the number of small packets on WAN
+	-- small packets: any packets smaller than MSS
+	-- IDEA: only one small outstanding packet for a connection
+
+Delayed ACK
+	-- ACK does not send back to peer immediately
+	-- wait 50-200ms (in this period, there may be data to send back to peer,so it can piggyback the ACK)
+	
+The maximum segment size (MSS)
+ 	-- The TCP Maximum Segment Size option (MSS) is defined to specify maximum number of data bytes in a TCP segment exclusive of TCP (or IP) header.
+	-- a parameter of the TCP protocol that specifies the largest amount of data, specified in bytes, that a computer or communications device can receive in a single TCP segment, and therefore in a single IP datagram. 
+	-- It does not count the TCP header or the IP header.
+	-- The IP datagram containing a TCP segment may be self-contained within a single packet, or it may be reconstructed from several fragmented pieces
+	-- either way, the MSS limit applies to the total amount of data contained within the final reconstructed TCP segment.
+          ** Therefore: MSS + Header ≤ MTU (MTU: maximum packet size)
+	-- Every host is required to be able to handle an MSS of at least 536 bytes.
+	-- For most computer users, the MSS option is established by operating system on the SYN packet during the TCP handshake. 
+		** Each direction of data flow can use a different MSS.
+	
+
+
+TCP Vegas 
+	-- a TCP congestion avoidance algorithm 
+	-- emphasizes packet delay, rather than packet loss, as a signal to help determine the rate at which to send packets
+	-- TCP Vegas detects congestion at an incipient stage based on increasing Round-Trip Time (RTT) values of the packets in the connection 
+		* unlike other flavors like Reno, NewReno, etc., which detect congestion only after it has actually happened via packet drops.
+	-- The algorithm depends heavily on accurate calculation of the Base RTT value. 
+		* If it is too small then throughput of the connection will be less than the bandwidth available while if the value is too large then it will overrun the connection.
+	-- performance of Vegas degrades because Vegas reduces its sending rate before Reno as it detects congestion early and hence gives greater bandwidth to co-existing TCP Reno flows.
+
+TCP CUBIC
+	-- CUBIC is a less aggressive and more systematic derivative of BIC, in which the window is a cubic function of time since the last congestion event, with the inflection point set to the window prior to the event. 
+	-- CUBIC is used by default in Linux kernels since version 2.6.19.
