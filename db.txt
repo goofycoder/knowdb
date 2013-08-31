@@ -1,0 +1,13 @@
+Index 
+  - A data structure that improves the speed of data retrieval operations on a database table 
+  - Cost of index
+    * additional writes
+    * more storage space to maintain the extra copy of data.
+    
+Why index?
+  - Database softwares use indexing technology that enables *sub-linear* time lookup to improve performance
+  - as linear search is inefficient for large databases.
+  
+Implementation of Index 
+  - can be implemented using a variety of data structures. 
+  - Popular index include balanced trees, B+ trees and hashes.
