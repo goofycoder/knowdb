@@ -34,8 +34,10 @@ $gdb -q <symbol_file>
 (gdb) p/u variable	        // unsigned integer.
 (gdb) p/c variable	        // char
 (gdb) p/f variable	        // floating number
-    
 
+// print array
+(gdb) p *array@len
+    
 ===========================================
 $gdb -q
  
