@@ -3,6 +3,8 @@ Index
   - Cost of index
     * additional writes
     * more storage space to maintain the extra copy of data.
+    * Updating a table with indexes takes more time than updating a table without (because the indexes also need an update). 
+	- should only create indexes on columns (and tables) that will be frequently searched against.
     
 Why index?
   - Database softwares use indexing technology that enables *sub-linear* time lookup to improve performance
@@ -11,7 +13,22 @@ Why index?
 Implementation of Index 
   - can be implemented using a variety of data structures. 
   - Popular index include balanced trees, B+ trees and hashes.
+  
+How index works?
+  - For example, we store the data in B-tree. 
+  - Initial disk reads narrowed the search range by a factor of two. 
+  - That can be improved substantially by creating an auxiliary index that contains the first record in each disk block (sometimes called a sparse index). 
+  - This auxiliary index would be 1% of the size of the original database, but it can be searched more quickly. 
+  - Finding an entry in the auxiliary index would tell us which block to search in the main database
+    after searching the auxiliary index, we would have to search only that one block of the main database
+    	* at a cost of one more disk read.
+  
+How to create index:
+  - SQL:  CREATE INDEX index_name ON table_name (column_name)
 
+Cardinality (Uniqueness) 
+  - A measure of the "number of elements of the set". 
+  - For example, the set A = {2, 4, 6} contains 3 elements, and therefore A has a cardinality of 3.
 
 Sharding
   - A database shard is a horizontal partition in a database or search engine. 
@@ -19,6 +36,15 @@ Sharding
   - Horizontal partitioning is a database design principle whereby rows of a database table are held separately
 		* rather than being split into columns (which is what normalization and vertical partitioning do)
 	- Each partition forms part of a shard, which may in turn be located on a separate database server or physical location.
+	
+Sharding example:
+  - If range-based scheme: split:
+  	* A-H  ==> shard_0
+  	* I-Z  ==> shard_1
+  - downside: disk I/O
+  - workaround: pre-split
+  	* split to many logical shard
+  	* distribute to fewer physical shard
 
 Advantage of sharding
 	- Total number of rows in each table in each DB is reduced. 
@@ -53,3 +79,5 @@ Vertical partitioning
 	- Different physical storage might be used to realize vertical partitioning as well; storing infrequently used or very wide columns on a different device, for example, is a method of vertical partitioning. 
 	- Also called "row splitting" (the row is split by its columns). 
 	- A common form of vertical partitioning is to split dynamic data (slow to find) from static data (fast to find) in a table where the dynamic data is not used as often as the static. 
+	
+
