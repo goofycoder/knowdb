@@ -1,0 +1,16 @@
+Life time of HTTPS request
+    - User clicks a link or enters the URL directly into the browser's address bar.
+    - Browser resolves server's host name.
+    - Browser sends the request over HTTPS to the server.
+    - HTTP server (such as apache, Nginx) gets the request and terminates HTTPS/SPDY.
+      * front end server received request on port 443
+    - Handle HTTP caching: (such as Varnish) as Web application accelerator
+    - Load balancing the traffic (such as HAProxy)
+      * HAproxy uses round robin scheme to select a backend to use.
+      * HAProxy does periodic health checks and automatically removes dead backends from the pool.
+    - Web server (thin/puma) receives the request and passes control to application code. 
+    - Application prepares a response.
+    - Response goes through web server and through back all the stacks (such as HAProxy, Varnish and Nginx) back to the browser.
+    
+    
+    
