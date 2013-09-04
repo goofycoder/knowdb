@@ -11,3 +11,45 @@ Why index?
 Implementation of Index 
   - can be implemented using a variety of data structures. 
   - Popular index include balanced trees, B+ trees and hashes.
+
+
+Sharding
+  - A database shard is a horizontal partition in a database or search engine. 
+  - Each individual partition is referred to as a shard or database shard.
+  - Horizontal partitioning is a database design principle whereby rows of a database table are held separately
+		* rather than being split into columns (which is what normalization and vertical partitioning do)
+	- Each partition forms part of a shard, which may in turn be located on a separate database server or physical location.
+
+Advantage of sharding
+	- Total number of rows in each table in each DB is reduced. 
+		* Since the tables are divided and distributed into multiple servers, 
+	- Reduces index size, which generally improves search performance. 
+	- DB shard can be placed on separate hardware
+		* Enable a distribution of DB over a large number of machines: DB performance can be spread out over multiple machines, greatly improving performance. 
+	- If DB shard is based on some real-world segmentation of the data (e.g., European customers v. American customers) 
+		* it may infer the appropriate shard membership easily and automatically, and query only the relevant shard.
+	- Consistent hashing is one form of automatic sharding to spread large loads across multiple smaller services and servers.
+	
+Disadvantages of sharding
+	- Sharding a database table before it has been optimized locally causes premature complexity. 
+	- Sharding should be used only when all other options for optimization are inadequate. 
+	- The introduced complexity of DB sharding causes the following potential problems:
+		* Increased complexity of SQL 
+			- Increased bugs because the developers have to write more complicated SQL to handle sharding logic.
+		* Sharding introduces complexity 
+			- The sharding software that partitions, balances, coordinates, and ensures integrity can fail.
+		* Single point of failure
+			- Corruption of one shard due to network/hardware/systems problems causes failure of the entire table.
+		* Failover servers more complex 
+			- Failover servers must themselves have copies of the fleets of database shards.
+		* Backups more complex 
+			- Database backups of the individual shards must be coordinated with the backups of the other shards.
+		* Operational complexity added 
+			- Adding/removing indexes, adding/deleting columns, modifying the schema becomes much more difficult.
+
+Vertical partitioning 
+	- involves creating tables with fewer columns and using additional tables to store the remaining columns.
+	- Normalization also involves this splitting of columns across tables, but vertical partitioning goes beyond that and partitions columns even when already normalized. 
+	- Different physical storage might be used to realize vertical partitioning as well; storing infrequently used or very wide columns on a different device, for example, is a method of vertical partitioning. 
+	- Also called "row splitting" (the row is split by its columns). 
+	- A common form of vertical partitioning is to split dynamic data (slow to find) from static data (fast to find) in a table where the dynamic data is not used as often as the static. 
