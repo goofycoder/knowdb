@@ -1,16 +1,35 @@
 Life time of HTTPS request
     - User clicks a link or enters the URL directly into the browser's address bar.
     - Browser resolves server's host name.
+        * DNS lookup
     - Browser sends the request over HTTPS to the server.
     - HTTP server (such as apache, Nginx) gets the request and terminates HTTPS/SPDY.
-      * front end server received request on port 443
+        * front end server received request on port 443
     - Handle HTTP caching: (such as Varnish) as Web application accelerator
+        * If the requested document/content is already in the cache, it is immediately returned, otherwise the request is passed further.
     - Load balancing the traffic (such as HAProxy)
-      * HAproxy uses round robin scheme to select a backend to use.
-      * HAProxy does periodic health checks and automatically removes dead backends from the pool.
-    - Web server (thin/puma) receives the request and passes control to application code. 
+        * HAproxy uses round robin scheme to select a backend to use.
+        * HAProxy does periodic health checks and automatically removes dead backends from the pool.
+    - Backend server, upon receiving the request, invokes the application allowing it to handle it. 
     - Application prepares a response.
     - Response goes through web server and through back all the stacks (such as HAProxy, Varnish and Nginx) back to the browser.
     
-    
+HTTP server error handling (example)
+
+Q: What happens when all application servers are dead?
+A: After marking all backends as unavailable, Load balancer return "503 Service Unavailable error code" to front-end server that will show maintenance page to users. 
+
+Q: What happens in the case of a traffic spike, when there are more incoming connections than available end points?
+A: Connections will wait in a queue until backends can handle them. If a request stays in queue longer than 2 minutes 
+   it will be dropped. The client will get 504 Gateway Timeout HTTP error code.
+
+Q: What happens when the application doesn't respond in time?
+A: We have a hard 50 seconds limit on backend reply, so if the application doesn't respond in that time, 
+front end server sends back 504 Gateway Timeout to the client.
+
+Q: What happens when a front end server fails?
+A: Failover (active standby). In addition to all front end processes (Nginx, Varnish and HAProxy) being monitored locally, 
+we have a failover mechanism through a floating IP that switches to a backup front end server. 
+The backup server is always on stand by and ready to immediately process requests. 
+Any active and incoming connections made between time of the failure and failover switch will be lost.
     
