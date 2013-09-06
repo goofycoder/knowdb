@@ -80,4 +80,38 @@ Vertical partitioning
 	- Also called "row splitting" (the row is split by its columns). 
 	- A common form of vertical partitioning is to split dynamic data (slow to find) from static data (fast to find) in a table where the dynamic data is not used as often as the static. 
 	
+What happens during a simple write operation (Simplified version)
+	1: The client sends a write command to the database (data is in client's memory).
+	2: The database receives the write (data is in server's memory).
+	3: The database calls the system call that writes the data on disk (data is in the kernel's buffer).
+		*
+	4: The operating system transfers the write buffer to the disk controller (data is in the disk cache).
+		* could control by e.g., fsync().
+	5: The disk controller actually writes the data into a physical media (a magnetic disk, a Nand chip, ...).
+		* No control over Step 3
+		
+   Details about step 3:
+   	- Most advanced kernels implement different layers of caching
+   		* file system level caching (called the page cache in Linux) and
+   		* smaller buffer cache that is a buffer containing the data that waits to be committed to the disk.
+	- Buffer cache is usually never turned off because this means that every write to the file 
+	  will result into data committed to the disk that is too slow for almost all the applications.
+	- We can use the write system call to transfer data to the kernel buffers
+	  We don't have much control about how much time this system call will take before returning successfully. 
+	  The kernel write buffer is limited in size, if the disk is not able to cope with the application write bandwidth, 
+	  the kernel write buffer will reach it's maximum size and the kernel will block our write. 
+	  When the disk will be able to receive more data, the write system call will finally return. 
+	  After all the goal is to, eventually, reach the physical media. 
 
+Details of Step 4:
+	- the kernel transfers data to the disk controller
+	- By default it will try to avoid doing it too often, because it is faster to transfer it in bigger pieces. 
+	  For instance Linux by default will actually commit writes after 30 seconds. 
+	  This means that if there is a failure, all the data written in the latest 30 seconds can get potentially lost.
+	- The POSIX API provides a family of system calls to force the kernel to write buffers to the disk: 
+	  the most famous of the family is probably the fsync system call 
+	  Using fsync the database system has a way to force the kernel to actually commit data on disk.
+	   * very expensive operation: fsync will initiate a write operation every time it is called and 
+	    there is some data pending on the kernel buffer. 
+	   * Fsync() also blocks the process for all the time needed to complete the write, 
+	     on Linux it will also block all the other threads that are writing against the same file.
