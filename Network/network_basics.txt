@@ -1,3 +1,17 @@
+TCP (Transmission Control Program)
+    - TCP provides reliable, ordered, error-checked delivery of a stream of octets between programs running on computers on network. 
+    - TCP resides at the transport layer.
+        * provide a communication service at an intermediate level between application program and the Internet Protocol (IP). 
+    - when an application program desires to send a large chunk of data across the Internet using IP, 
+      instead of breaking the data into IP-sized pieces and issuing a series of IP requests, the software 
+      can issue a single request to TCP and let TCP handle the IP details.
+    - Once the TCP receiver has reassembled the sequence of octets originally transmitted, it passes them to the receiving application. 
+      Thus, TCP abstracts the application's communication from the underlying networking details.
+
+The use of TCP
+    - Web browsers use TCP when they connect to servers on the World Wide Web, 
+    - used to deliver email and transfer files from one location to another.
+
 Life time of HTTPS request
     - User clicks a link or enters the URL directly into the browser's address bar.
     - Browser resolves server's host name.
