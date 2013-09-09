@@ -1,0 +1,213 @@
+// How to act like CA to issue a certificate
+
+
+// Step 1: [CA_ADMIN] create CA cert & CA private key 
+//         Also generate ca_cert.srl file that contains cert serial number
+$ openssl req -x509 -out ca_cert.pem -newkey rsa:1024 -keyout ca_priv_key.pem -days 365
+
+Generating a 1024 bit RSA private key
+.++++++
+..........................++++++
+writing new private key to 'ca_priv_key.pem'
+Enter PEM pass phrase:
+Verifying - Enter PEM pass phrase:
+-----
+You are about to be asked to enter information that will be incorporated
+into your certificate request.
+What you are about to enter is what is called a Distinguished Name or a DN.
+There are quite a few fields but you can leave some blank
+For some fields there will be a default value,
+If you enter '.', the field will be left blank.
+-----
+Country Name (2 letter code) [AU]:US
+State or Province Name (full name) [Some-State]:MA
+Locality Name (eg, city) []:Boston
+Organization Name (eg, company) [Internet Widgits Pty Ltd]:Blackhat Yan
+Organizational Unit Name (eg, section) []:STBU  
+Common Name (e.g. server FQDN or YOUR name) []:Yan_CA
+Email Address []:yan_ca@yan.com
+
+
+// Step 1.2: [CA_ADMIN] check the self-signed CA cert we just created
+$ openssl x509 -in ca_cert.pem -text -noout
+Certificate:
+    Data:
+        Version: 3 (0x2)
+        Serial Number: 15570577198938923480 (0xd815cd774a8d21d8)
+    Signature Algorithm: sha1WithRSAEncryption
+        Issuer: C=US, ST=MA, L=Boston, O=Blackhat Yan, OU=STBU, CN=Yan_CA/emailAddress=yan_ca@yan.com
+        Validity
+            Not Before: Sep  9 21:48:56 2013 GMT
+            Not After : Sep  9 21:48:56 2014 GMT
+        Subject: C=US, ST=MA, L=Boston, O=Blackhat Yan, OU=STBU, CN=Yan_CA/emailAddress=yan_ca@yan.com
+        Subject Public Key Info:
+            Public Key Algorithm: rsaEncryption
+                Public-Key: (1024 bit)
+                Modulus:
+                    00:c3:3a:de:a1:c9:f3:93:80:d1:32:8d:ef:37:e1:
+                    91:e2:9c:7d:4e:0c:0a:ab:b7:b1:11:62:1a:7b:a5:
+                    e7:19:9c:79:4f:b9:c0:80:2f:a3:d8:98:6d:70:c2:
+                    22:2d:3b:37:51:3d:40:16:a4:1c:24:8b:97:b1:aa:
+                    47:9b:22:62:15:09:ef:fd:c7:d1:58:da:38:c1:cc:
+                    ee:ba:e8:31:c0:5c:ab:43:76:af:6e:2e:69:a5:bb:
+                    2f:1f:ed:2b:9f:36:41:15:0d:70:01:19:08:9d:29:
+                    f9:52:94:56:64:02:47:ec:9a:00:ea:91:8f:fa:60:
+                    20:20:53:7b:46:5f:d2:ca:89
+                Exponent: 65537 (0x10001)
+        X509v3 extensions:
+            X509v3 Subject Key Identifier: 
+                72:96:4C:68:90:A4:8F:F2:57:7B:18:C7:A3:93:6A:E5:58:90:D5:97
+            X509v3 Authority Key Identifier: 
+                keyid:72:96:4C:68:90:A4:8F:F2:57:7B:18:C7:A3:93:6A:E5:58:90:D5:97
+
+            X509v3 Basic Constraints: 
+                CA:TRUE
+    Signature Algorithm: sha1WithRSAEncryption
+         7c:2c:b2:ec:15:c0:93:e2:12:5c:48:ec:80:e8:a9:25:3a:23:
+         de:7f:c6:66:3d:17:99:ca:d8:55:7d:c3:91:5e:54:e0:12:f0:
+         e9:da:65:76:db:90:90:12:62:ad:bc:54:42:48:a7:3f:2b:14:
+         49:4f:40:9f:38:02:46:8a:49:25:60:da:5a:27:fb:f9:51:41:
+         24:90:5d:6d:b4:aa:ec:92:03:37:0e:0d:2b:2c:6b:2d:a1:56:
+         eb:40:2c:b7:52:ba:be:89:11:b0:f0:99:00:e2:96:33:2d:ed:
+         36:3e:6d:60:8f:70:ec:55:a0:53:7e:b4:f3:14:66:54:b7:7b:
+         36:04
+
+// Step 2: [normal person]: generate certificate request
+$ openssl req -out yan_cert_req.pem -new -keyout yan_priv_key.pem
+Generating a 1024 bit RSA private key
+...................++++++
+......++++++
+writing new private key to 'yan_priv_key.pem'
+Enter PEM pass phrase:
+Verifying - Enter PEM pass phrase:
+-----
+You are about to be asked to enter information that will be incorporated
+into your certificate request.
+What you are about to enter is what is called a Distinguished Name or a DN.
+There are quite a few fields but you can leave some blank
+For some fields there will be a default value,
+If you enter '.', the field will be left blank.
+-----
+Country Name (2 letter code) [AU]:US
+State or Province Name (full name) [Some-State]:MA
+Locality Name (eg, city) []:Boston
+Organization Name (eg, company) [Internet Widgits Pty Ltd]:Blackhat Yan
+Organizational Unit Name (eg, section) []:SAMPG
+Common Name (e.g. server FQDN or YOUR name) []:yan_person  
+Email Address []:yan@yan.com
+
+Please enter the following 'extra' attributes
+to be sent with your certificate request
+A challenge password []:yanchallenge
+An optional company name []:yan_optional_co
+
+
+// Step 2.1: [normal person]: check the cert request just created
+$ openssl req -noout -text -verify -in yan_cert_req.pem 
+verify OK
+Certificate Request:
+    Data:
+        Version: 0 (0x0)
+        Subject: C=US, ST=MA, L=Boston, O=Blackhat Yan, OU=SAMPG, CN=yan_person/emailAddress=yan@yan.com
+        Subject Public Key Info:
+            Public Key Algorithm: rsaEncryption
+                Public-Key: (1024 bit)
+                Modulus:
+                    00:fd:5e:4d:de:9f:2d:cd:09:76:ec:c2:33:5d:9c:
+                    1a:af:95:f1:0e:58:e0:60:dc:85:7e:b6:3b:7b:6b:
+                    70:dd:00:38:ee:15:0f:b8:32:c6:30:58:56:eb:92:
+                    4f:90:9d:58:86:85:01:ef:c1:12:07:74:92:bf:7e:
+                    d7:d5:7a:2c:3d:2a:46:5d:c8:cd:98:b6:12:f4:74:
+                    dc:ff:3c:6e:88:8c:46:3c:fb:d4:a3:9a:ee:e5:3e:
+                    66:5b:7c:8b:2b:56:95:ed:aa:de:7e:fd:53:b4:ed:
+                    2a:a6:90:a9:3c:3d:c9:21:af:6a:6e:3b:da:4d:56:
+                    b7:55:06:03:80:37:44:82:ad
+                Exponent: 65537 (0x10001)
+        Attributes:
+            challengePassword        :unable to print attribute
+            unstructuredName         :unable to print attribute
+    Signature Algorithm: sha1WithRSAEncryption
+         a3:af:86:45:a8:cb:37:4c:f1:4e:a1:8b:35:d1:ce:38:d5:ef:
+         6f:6f:7a:f3:68:a5:c8:7a:ae:b1:0b:36:76:64:d0:ba:c5:20:
+         98:a7:4a:9f:dd:94:9d:f3:f9:21:87:6d:f7:f2:ca:c9:05:a0:
+         a0:67:bd:88:02:bc:c4:bf:2e:f7:81:98:84:2b:33:c5:b1:78:
+         b8:91:de:d2:ad:9c:8f:8e:0f:d5:c8:be:f8:fd:75:33:cf:21:
+         b6:b3:a8:3b:48:9d:35:59:df:66:d5:67:b2:84:37:05:52:d6:
+         9f:ac:f7:60:58:75:7c:e4:b9:c3:b9:ce:38:68:e1:6a:cc:42:
+         1a:41
+
+// Step 3: [CA-ADMIN]: issue a certificate
+//         output: yan_cert.pem
+$ sudo rm ~/.rnd    // run this if you got "unable to write 'random state'"
+
+$ openssl x509 -req -in yan_cert_req.pem -CA ca_cert.pem -CAkey ca_priv_key.pem -CAcreateserial -out yan_cert.pem -days 365
+Signature ok
+subject=/C=US/ST=MA/L=Boston/O=Blackhat Yan/OU=SAMPG/CN=yan_person/emailAddress=yan@yan.com
+Getting CA Private Key
+Enter pass phrase for ca_priv_key.pem:
+
+
+// Step 4: create pkcs12 file from the PEM cert generated 
+//        generate yan_cert.p12 file
+$ openssl pkcs12 -export -in yan_cert.pem -inkey yan_priv_key.pem -out yan_cert.p12 -name "yan certificate"
+Enter pass phrase for yan_priv_key.pem:
+Enter Export Password:
+Verifying - Enter Export Password:
+
+
+// Step 4: display pkcs12 cert 
+$ openssl pkcs12 -info -in yan_cert.p12 
+Enter Import Password:                       // same as export password
+MAC Iteration 2048
+MAC verified OK
+PKCS7 Encrypted data: pbeWithSHA1And40BitRC2-CBC, Iteration 2048
+Certificate bag
+Bag Attributes
+    localKeyID: C6 B9 A6 04 1E 85 BA D5 18 64 C1 5E 4F E5 AD 1A 40 39 EF E1 
+    friendlyName: yan certificate
+subject=/C=US/ST=MA/L=Boston/O=Blackhat Yan/OU=SAMPG/CN=yan_person/emailAddress=yan@yan.com
+issuer=/C=US/ST=MA/L=Boston/O=Blackhat Yan/OU=STBU/CN=Yan_CA/emailAddress=yan_ca@yan.com
+-----BEGIN CERTIFICATE-----
+MIICfTCCAeYCCQDkBZbb03PkhzANBgkqhkiG9w0BAQUFADCBgTELMAkGA1UEBhMC
+VVMxCzAJBgNVBAgMAk1BMQ8wDQYDVQQHDAZCb3N0b24xFTATBgNVBAoMDEJsYWNr
+aGF0IFlhbjENMAsGA1UECwwEU1RCVTEPMA0GA1UEAwwGWWFuX0NBMR0wGwYJKoZI
+hvcNAQkBFg55YW5fY2FAeWFuLmNvbTAeFw0xMzA5MDkyMjAzNDNaFw0xNDA5MDky
+MjAzNDNaMIGDMQswCQYDVQQGEwJVUzELMAkGA1UECAwCTUExDzANBgNVBAcMBkJv
+c3RvbjEVMBMGA1UECgwMQmxhY2toYXQgWWFuMQ4wDAYDVQQLDAVTQU1QRzETMBEG
+A1UEAwwKeWFuX3BlcnNvbjEaMBgGCSqGSIb3DQEJARYLeWFuQHlhbi5jb20wgZ8w
+DQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAP1eTd6fLc0JduzCM12cGq+V8Q5Y4GDc
+hX62O3trcN0AOO4VD7gyxjBYVuuST5CdWIaFAe/BEgd0kr9+19V6LD0qRl3IzZi2
+EvR03P88boiMRjz71KOa7uU+Zlt8iytWle2q3n79U7TtKqaQqTw9ySGvam472k1W
+t1UGA4A3RIKtAgMBAAEwDQYJKoZIhvcNAQEFBQADgYEAV9BBHWl716B+STKCsI91
+Eps5XyVO0CI7LHPoB7hql7Ez8/RTHdCHGz+Yg1o5OWGluPShO3VIu7gaJdO8IV7x
+A6PHfoLdj1z9HiRasrXK5LFlAZRIzEiP1XwoVznXUM0X3lbYNGaXtecrVvaOKdIU
+7NwWaROLcW8dWNiqIAUKcBQ=
+-----END CERTIFICATE-----
+PKCS7 Data
+Shrouded Keybag: pbeWithSHA1And3-KeyTripleDES-CBC, Iteration 2048
+Bag Attributes
+    localKeyID: C6 B9 A6 04 1E 85 BA D5 18 64 C1 5E 4F E5 AD 1A 40 39 EF E1 
+    friendlyName: yan certificate
+Key Attributes: <No Attributes>
+Enter PEM pass phrase:                                             // personal private key
+Verifying - Enter PEM pass phrase:    
+-----BEGIN ENCRYPTED PRIVATE KEY-----
+MIICxjBABgkqhkiG9w0BBQ0wMzAbBgkqhkiG9w0BBQwwDgQIUV6hSEO8JIsCAggA
+MBQGCCqGSIb3DQMHBAgFejYt+nqf/wSCAoCNmyaB2gZAV964V5G4hdRRuOi9fMHS
+HD34rjiIw1uxfXS3UPQsPvgSReYn/I8XifNkVmAQ5k5ZymfSbfEBdbtkEYtlcgyK
+6PhoPhdvDs5wJB5UkawWrIeaK8ddlAfMfw8axR2s4lhR5pTPkKmNeEbtDKrsbU1m
+ozqWTzhYUOTeP1YNQY4g4TmsV4kqAchGvBd+Za2E7jsZh3wamsZvf+n/wKNoGbMD
+l77xtITtQaUJ8msZJ2HLXp6TSW85kMy/ExVvI60pkt6j8qum+9u86rq6Ky+Yk/Ov
+Dmm5UljJUE1PO9bYLyu5tucdBCPUauTAZGvFbfMFZT1/HeRp/1auKi8zUmiWO0RA
+5qRf7rZLGLdKUpmxeQ56ElvDtjZfID+5Qe3x6W/TF1kYYyFuFEZmWC6UruNlUlQ5
+a72pwdOy0Urmpb3ouQiuT0dd/Uv81M+RdCeJVhJa1s8mnYZ0mk0tFN4uMAOfZ44R
+cfGUfY7eqmqcnRc/u4Tkxq/6fyR/VmhZllnjNuqhqDZAcQ6Boqz5NMicS20ejMia
+XxY0ySTFoRrrT4hwXwecA4+jKpM/ELdv3IISq9NbWx/gQe6JZOx2gBL4oqNfLmOR
+jmGugfTplXEaLqkKeT8+qBU8FfAhRNeaEWYmEBQIbyilg3fdEdqAEvjsm2tAtxbp
+r6QPBzreDhzh9/bLvzZhOBzCFeIb1eGMkN0usgYLHKsKeU3RIsZZrCvhX21JYlPl
+8O2aJMJsg+2LXyENZ37J2WKC/hGzR8zYynoxW3SynPlf0TuqObK4iX7cyohEEOTd
+QgPkICAWNNTpxKgxjWdi5IDNOv05l7Ix93rDs5es2qZjOSz4M8tRm4uR
+-----END ENCRYPTED PRIVATE KEY-----
+
+
+
