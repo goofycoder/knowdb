@@ -1,0 +1,29 @@
+ AVL tree (Adelson-Velskii and Landis' tree, named after the inventors) 
+	- self-balancing binary search tree
+	- In an AVL tree, the heights of the two child subtrees of any node differ by at most one 
+	- if at any time they differ by more than one, rebalancing is done to restore this property. 
+	- Lookup, insertion, and deletion all take O(log n) time in both the average and worst cases, where n is the number of nodes in the tree prior to the operation.	
+	- insertions and deletions may require the tree to be rebalanced by one or more tree rotations.
+	- For each node checked, if the balance factor remains -1, 0, or +1 then no rotations are necessary. 
+	  However, if balance factor becomes less than -1 or greater than +1, the subtree rooted at this node is unbalanced.
+
+AVL tree vs. red-black tree
+	- similarity:
+		* both support the same set of operations and take O(log n) time for the basic operations. 
+		* both are height-balanced, not weight balanced
+	- Diff:
+		* For lookup-intensive applications, AVL trees are faster than red-black trees because they are more rigidly balanced
+
+Binary Tree vs Binary Search Tree
+    - Binary tree:
+        * a tree data structure in which each node has at most two child nodes, 
+    - Binary Search Tree:
+        * binary search tree (BST) (sometimes also called an ordered or sorted binary tree)
+            - The left subtree of a node contains only nodes with keys less than the node's key.
+            - The right subtree of a node contains only nodes with keys greater than the node's key.
+            - The left and right subtree must each also be a binary search tree.
+            - There must be no duplicate nodes.
+
+How to balance the tree:
+	- tree rotation is an operation on a binary tree that changes the structure without interfering with the order of the elements. 
+	- balanceFactor = height(left-subtree) - height(right-subtree). 

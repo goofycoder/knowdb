@@ -1,3 +1,32 @@
+View 
+    - a virtual table representing the result of a database query. 
+        * the *result set* of a stored query — or map-and-reduce functions — on the data
+       * the database users can query just as they would a persistent database collection object. 
+       * This pre-established query command is kept in the database dictionary. 
+    - contrast to the base table
+
+Views can provide advantages over tables:
+    - View can represent a subset of the data contained in a table
+    - view can limit the degree of exposure of the underlying tables to the outer world: 
+        * a given user may have permission to query the view, while denied access to the rest of the base table
+        * provide extra security
+    - Views can join and simplify multiple tables into a single virtual table
+    - Views can act as aggregated tables, where the database engine aggregates data (sum, average etc.) and 
+      presents the calculated results as part of the data Views can hide the complexity of data; 
+    - Views take very little space to store; 
+    - the database contains only the definition of a view, not a copy of all the data which it presents
+
+materialized view (also known as snapshot)
+    - a database object that contains the results of a query. 
+    - Example:
+        * it may be a local copy of data located remotely
+        * may be a subset of the rows and/or columns of a table or join result
+        * may be a summary based on aggregations of a table's data. 
+    - Materialized views, which store data based on remote tables, are also known as snapshots. 
+        * A snapshot can be redefined as a materialized view.
+
+=============================== Index (Begin) =================================
+
 Index 
   - A data structure that improves the speed of data retrieval operations on a database table 
   - Cost of index
@@ -25,6 +54,8 @@ How index works?
   
 How to create index:
   - SQL:  CREATE INDEX index_name ON table_name (column_name)
+
+================================== Index (end) =================================
 
 Cardinality (Uniqueness) 
   - A measure of the "number of elements of the set". 
