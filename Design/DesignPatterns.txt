@@ -1,0 +1,59 @@
+Adapter Patten
+    - GOF: "Convert the interface of a class into another interface clients expect."
+
+Decorator Pattern
+    - GOF: "Attach additional responsibilities to an object dynamically."
+    - doesn't seem to be commonly used
+
+Adapter, Bridge, Decorator and Proxy pattern
+    - Adapter pattern is very similar to Bridge, Decorator and Proxy patterns. 
+        * Each of these patterns has similar features to the adapter pattern 
+        * the difference is in the intent of the pattern. 
+    - Intent of Adapter pattern 
+        * Simply convert a local interface to another class's interface. 
+    - Intent of Bridge pattern
+        * Allow two implementations to vary independently. 
+    - Intent of Decorator pattern
+        * Enhance another class and the proxy pattern intent is to be a placeholder for the other class. 
+        
+Parrallel Pattern
+    - Goal of Parrallel pattern
+        * minimize the communication between threads (i.e. the synchronization between threads to communicate the data)
+        * to minimize the idle time for any given thread (i.e. we want to keep our threads consistently busy) 
+        * to provide an even load balancing across each thread (i.e. so each thread does the same amount of work).
+    - Example: Levenshtein distance ()
+        * http://community.topcoder.com/tc?module=Static&d1=tutorials&d2=wavefrontPattern
+
+
+Template Method Pattern
+    - a pattern that creates a template(framework) of an algorithm
+    - Define the skeleton of an algorithm in an operation, deferring some steps to subclasses. 
+    - Let subclasses redefine certain steps of an algorithm without changing the algorithm's structure.
+    - Example:
+       Brew Coffee & Brew Tea
+        class Coffee {                                  class Tea {
+        public:                                         public:
+            void prepareRecipe();                           void prepareRecipe();
+        };                                              };
+
+        void Coffee::prepareRecipe() {                  void Tea::prepareRecipe() {
+            boilWater();                                    boilWater();
+            brewCoffeeGrinds();                             steepTeaBag();
+            pourInCup();                                    pourInCup();
+            addSugarAndMilk();                              addLemon();
+        }                                               }
+
+        ==> Template Method pattern:
+        class CaffeineBeverage {
+            boilWater();                // same for Coffee or Tea
+            brew();                     // Coffee: brewCoffeeGrinds();  Tea: steepTeaBag();
+            pourInCup();                // same for Coffee or Tea
+            addCondiment();             // Coffee: addSugarAndMilk();   Tea: addLemon();
+        };
+    - Advantage of Template Method pattern
+        * provides a framework of algorithm
+        * concentrates knowledge about the algorithm
+        * rely on subclass to provide implementation details
+        * maximize code reuse
+      
+        
