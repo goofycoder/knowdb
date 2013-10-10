@@ -72,7 +72,7 @@ Default copy ctor and assignment operator
 differences between new & malloc
     - new" is aware of constructors/destructors; "malloc" is not
     
-Virtual functions?
+Virtual functions
     - represent the mechanism through which C++ implements the OO concept of polymorphism. 
     - allow to redefine derived class functions from the base class with altered behavior so that you can call the right function for the right object 
         * (allow to perform the right operation for an object through only a pointer/reference to that object's base class)
@@ -84,10 +84,33 @@ Virtual functions?
         * Through virtual functions, C++ achieves what is called late binding (dynamic binding or runtime binding)
             * Connect a function call to a function body at runtime based on the type of the object
             * not at compilation time (static binding)
-            
-abstract class
+
+Virtual function internals
+    - Compiler does all the magic: 
+        1. For each class that contains virtual functions (base and derived), the compiler creates a static table called the VTABLE. 
+        2. Each virtual function will have a corresponding entry in that table (a function pointer) 
+             * For each Base class (it's not static, each object will have it) the compiler adds a hidden pointer called the VPTR
+                - VPTR is initialized to point to the beginning of the VTABLE 
+            * for Dderived classes the entries will contain the overridden virtual functions' pointers. 
+                - same VPTR will be initialized to point to the beginning of the derived class' VTABLE. 
+    - When you make a virtual function call through a base class pointer (that is, when you make a polymorphic call):
+        * the compiler quietly inserts code to fetch the VPTR and look up the function address in the VTABLE, thus calling the correct function. 
+        * This might seem overly complicated but on a typical machine it does not take much space and very efficient
+
+Abstract class
     - obtain an abstract class in C++ by declaring at least one pure virtual function in that class. 
     - A virtual function is transformed in a pure virtual with the help of the initializer "= 0". 
     - A pure virtual function does not need a definition. 
     - An abstract class cannot be instantiated but only used as a base in a hierarchy
     - A derivation from an abstract class must implement all the pure virtuals, otherwise it transforms itself into an abstract class
+    
+    
+Is there virtual constructor?
+    - NO, simply because you need to know the exact type of the object you want to create and virtual represent the exact opposite concept
+    - maybe refer to Factory Method 
+    - Factory Method Pattern 
+        * define an interface for creating an object, but let subclasses decide which class to instantiate. 
+        * Factory Method lets a class defer instantiation to subclasses
+
+RAII - Resource Acquisition Is Initialization 
+    - A technique (not limited to C++) that combines acquisition and release of resources with initialization and uninitialization of variables     

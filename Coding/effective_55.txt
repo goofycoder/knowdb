@@ -23,6 +23,28 @@ private:
 - enum is more like #define than 'const' does
     * you can take address of 'const', but not for 'enum' or '#define'
 
+================================== Item 9 ====================================
+Never call virtual function during construction or destruction
+ 
+If you do, the function in the base class will be called instead of the one 
+in the derived class.
+
+Reason:
+    - base class ctor executes before derived class ctors
+    - derived class members have not be initialized when base class ctor runs
+    - if Derived class ctor refers to Derived class member, then undefined behavior
+    - An object does not become a derived class object until Derived class ctor runs
+
+ 
+ 
+================================== Item 20 ====================================
+Prefer pass-by-reference-to-const over pass-by-value.
+    - typically more efficient (avoid to call ctors)
+    - avoid slicing problem (pass derived class object as a base class object)
+    
+Reference
+    - typically implemented as pointers
+
 
 ================================= Misc ========================================
 pass by reference to const
