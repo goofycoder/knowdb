@@ -13,6 +13,36 @@ Active Object Design Pattern
 Adapter Patten
     - GOF: "Convert the interface of a class into another interface clients expect."
 
+Command Pattern:
+    - Encapsulate method invocation
+    - Example: Remote Controller
+        class RemoteControl 
+        {
+        public:
+            Command slot;
+
+            void setCommand(Command command) { 
+                slot = command;
+            } 
+
+            void buttonWasPressed {
+                slot.execute();
+            }
+        };
+    
+        void TEST_RemoteControl() {
+            RemoteControl remote;
+    
+            Light light;
+            LightOnCommand lightOn(light);
+
+            remote.setCommand(lightOn);
+            // could be extended to add other commands
+            // e.g.: remote.setCommand(lightOff);
+
+            remote.buttonWasPressed();      // *** encapsulate the invocation of lightOn execution ***
+        } 
+
 Decorator Pattern
     - GOF: "Attach additional responsibilities to an object dynamically."
     - doesn't seem to be commonly used
