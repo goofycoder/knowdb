@@ -1,3 +1,15 @@
+threaded binary tree
+	- "A binary tree is threaded
+		* all right child pointers that would normally be null point to the inorder successor of the node
+		* all left child pointers that would normally be null point to the inorder predecessor of the node."
+	- Pro: 
+		1. makes the tree traversal a linear traversal
+			* more rapid than a recursive in-order traversal. 
+		2. Easier to discover the parent of a node from a threaded binary tree
+			* without explicit use of parent pointers or a stack, albeit slowly
+			* This can be useful where stack space is limited, or where a stack of parent pointers is unavailable 
+			(for finding the parent pointer via DFS).
+
 Graph traversal:
     - Two main ways to traverse the graph:
         * Breadth-first

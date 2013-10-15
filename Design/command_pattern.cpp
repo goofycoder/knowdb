@@ -1,3 +1,12 @@
+/* 
+    Pseudo code to explain the idea of command pattern
+    
+    Command Pattern:
+        encapsulate the invocation of command execution
+    
+        As in RemoteControl example:
+            execute() is encapsulated in buttonWasPressed()
+ */
 #include <iostream>
 
 class RemoteControl 
