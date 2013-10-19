@@ -1,0 +1,68 @@
+============== Spanner : Google’s globally distributed database ======================
+
+Key features of Spanner:
+  * Partitions data across many instances of Paxos state machines
+  * Automatically repartitions data across machines as the data volume increases or new servers are added. This feature is just awesome! Say good bye to manual sharding!!
+  * Scales up to trillions of database rows
+  * Supports general purpose transactions
+  * Provides a SQL based query language
+  * Configurable replication
+  * Externally consistent reads and writes
+  * Globally consistent reads across the database at a timestamp
+
+Architecture of Spanner
+  - Architecture
+  - Universe
+      * A single deployment of Spanner is referred to as a universe. 
+      * In practice there is usually one universe per environment. 
+  - Zones
+      * break up universe into zones. 
+      * Each zone is a unit of administration and represents a location which can house data replicas. 
+      * Zones can be added to and removed from the universe while the system is running. 
+      * The zone has a single zonemaster and many (100s-1000s) spanservers.
+        - Zonemasters assign data to spanservers. 
+        - Spanservers serve data to the clients. 
+        - Each zone also has a location proxy which helps clients locate spanservers that house the data. 
+        - The placement driver
+          * responsible for the transfer of data across zones. 
+          * It also remains in touch with the spanservers periodically to fulfill their data movement needs.      
+  - Tablet
+    * A single spanserver controls about 100-1000 instances of a data structure called tablet. 
+    * Each tablet is a bag/collection of mappings of the format
+        (key:string, timestamp -> string)
+
+Replication (by Paxos)
+  - is provided by the spanservers by implementing Paxos on atop every tablet. 
+  - Paxos state machine is implemented so that the bag of mappings are consistently replicated. 
+  - All writes to the tablet initiate the Paxos protocol while reads go to the nearest tablet directly. 
+  - The collective of replicas constitute a Paxos group.
+  - As is typical with Paxos one replica is elected the leader. 
+      * On the leader replica the spanserver implements a *lock table* to implement concurrency control.
+  
+Key Goals of F1′s design
+  - System must be able to scale up by adding resources
+  - Ability to re-shard and rebalance data without application changes
+  - ACID consistency for transactions
+  - Full SQL support, support for indexes
+
+Transaction Management
+  - Any operation that requires synchronization acquires a lock from the lock table. 
+  - Leaders also run a transaction manager to support distributed transactions. 
+  - The lock table and the transaction manager together provide transactionality. 
+  - When a transaction involves persisting across two Paxos groups, 
+    * the group leaders coordinate to carry out a two phase commit.
+
+Spanner’s objectives
+  - Main focus is on managing cross data center replicated data
+  - Ability to re-shard and rebalance data
+  - Automatically migrates data across machines
+
+Transactions & Timestamp management
+  - Spanner is the first system out there that assigns globally meaningful commit timestamps to distributed transactions. 
+  - Spanner provides the guarantee that if transaction T-1 commits before transaction T-2 starts then T-1′s commit timestamp will be smaller that T-2′s. 
+  - Spanner offers this guarantee at a global scale and is the first system to do so. 
+  - This feature is enabled by the TrueTime API.
+
+In a distributed database the partitioning scheme is the key to improved performance. 
+
+================= F1: A Distributed SQL Database That Scales =====================================
