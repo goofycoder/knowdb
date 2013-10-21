@@ -1,0 +1,28 @@
+MapReduce's use at Google:
+  - MapReduce is *batch* oriented.
+  - MapReduce would receive the epic amounts of webpage data collected by Google's crawlers 
+  - MapReduce would crunch this down to the links and metadata needed to actually search these pages. 
+  - Among so many other things, it would determine each site's PageRank
+    * PageRank: the site's relationship to all the other sites on the web.
+    
+Why not MapReduce at Google:
+  - Goal is to update the search index continuously, within seconds of content changing
+  - * without* rebuilding the entire index from scratch using MapReduce.
+  
+PageRank 
+  - attempts to measure the relative importance of a website based on what other sites it's linked to.
+  
+BigTable 
+  - a compressed, high performance, and proprietary data storage system built on 
+    * Google File System
+    * Chubby Lock Service
+    * SSTable (log-structured storage like LevelDB) 
+    
+BigTable 
+  - maps two arbitrary string values (row key and column key) and timestamp (hence three dimensional mapping) 
+    into an associated arbitrary byte array. 
+  - It is not a relational database and can be better defined as a sparse, distributed multi-dimensional sorted map.
+
+Google's Spanner RDBMS 
+  - is layered on an implementation of BigTable with a Paxos group for two-phase commits to each tablet. 
+  - Google F1 was built using Spanner to replace an implementation based on MySQL

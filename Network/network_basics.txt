@@ -1,3 +1,22 @@
+HTTP cookie (also known as web cookie, browser cookie) 
+    - small piece of data sent from a website  
+    - stored in a user's web browser while the user is browsing that website. 
+    - Every time the user loads the website, the browser sends the cookie back to the server to notify the website of the user's previous activity.
+    - Cookies were designed to be a reliable mechanism for websites to remember stateful information 
+      (such as items in a shopping cart) or to record the user's browsing activity 
+    - cookie content 
+        * (including clicking particular buttons, logging in, or recording which pages were visited by the user as far back as months or years ago).    
+
+Cookie's security concern
+    - cookies cannot carry viruses
+    - cookies cannot install malware on the host computer,
+    - tracking cookies and especially third-party tracking cookies are commonly used as ways to compile long-term records of individuals' browsing histories
+    - Cookies can also store passwords and forms a user has previously entered, such as a credit card number or an address. 
+
+How Cookie works:
+    - When a user accesses a website with a cookie function for the first time, a cookie is sent from server to the browser and stored with the browser in the local computer. 
+    - Later when that user goes back to the same website, the website will recognize the user because of the stored cookie with the user's information.
+
 TCP (Transmission Control Program)
     - TCP provides reliable, ordered, error-checked delivery of a stream of octets between programs running on computers on network. 
     - TCP resides at the transport layer.

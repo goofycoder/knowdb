@@ -1,0 +1,53 @@
+RPC used in Google
+  - protocol buffer (open-source)
+  - used in Bigtable
+  
+What are protocol buffers?
+  - Protocol buffers are a flexible, efficient, automated mechanism for serializing structured data
+    * think XML, 
+  - but smaller, faster, and simpler. 
+  - You define how you want your data to be structured once, 
+    * then you can use special generated source code to easily write and read your structured data to and from a variety of data streams 
+    * and using a variety of languages. 
+  - You can even update your data structure without breaking deployed programs that are compiled against the "old" format.
+
+
+Why not just use XML?
+  - Protocol buffers have many advantages over XML for serializing structured data. 
+  - Protocol buffers:
+    * simpler
+    * 3 to 10 times smaller
+    * 20 to 100 times faster
+    * less ambiguous
+    * generate data access classes that are easier to use programmatically
+    
+Example: model a person with a name and an email. 
+  - XML:
+  <person>
+    <name>John Doe</name>
+    <email>jdoe@example.com</email>
+  </person>
+  - # Textual representation of a protocol buffer.
+    # This is *not* the binary format used on the wire.
+    person {
+      name: "John Doe"
+      email: "jdoe@example.com"
+    }
+
+Simplicity of Protocol Buffer
+  - manipulating a protocol buffer is much easier:
+      cout << "Name: " << person.name() << endl;
+      cout << "E-mail: " << person.email() << endl;
+  - XML:
+      cout << "Name: "
+           << person.getElementsByTagName("name")->item(0)->innerText() << endl;
+      cout << "E-mail: "
+           << person.getElementsByTagName("email")->item(0)->innerText() << endl;
+           
+Cons of Protocol Buffer:
+  - protocol buffers are not always a better solution than XML 
+  – Example: protocol buffers would not be a good way to model a text-based document with markup (e.g. HTML)
+    * since you cannot easily interleave structure with text. 
+  - XML is human-readable and human-editable; protocol buffers, at least in their native format, are not. 
+  - XML is also – to some extent – self-describing. 
+    * A protocol buffer is only meaningful if you have the message definition (the .proto file).
