@@ -1,3 +1,40 @@
+** volatile keyword
+    *** volatile is a hint to the implementation to avoid aggressive optimization involving the object because the value of the object might be changed by means undetectable by an implementation
+        
+    
+    int some_int = 100;
+
+    while(some_int == 100) {
+        //your code
+    }
+    
+    When this program gets compiled, the compiler may optimize this code, if it finds that the program never ever makes any attempt to change the value of some_int, 
+    so it may be tempted to optimize the while loop by changing it from while(some_int == 100) to simply while(true) 
+    so that the execution could be fast (since the condition in while loop appears to be true always).
+    
+    However, sometimes, optimization may be undesirable, because it may be that someone else is changing the value of some_int from outside the program 
+    which compiler is not aware of, since it can't see it; but it's how you've designed it. 
+    In that case, compiler's optimization would not produce the desired result!
+    
+    So, to ensure the desired result, you need to somehow stop the compiler from optimizing the while loop. That is where the volatile keyword plays it's role. All you need to do is this,
+        volatile int some_int = 100; 
+        
+    volatile tells the compiler that,
+        "Hey compiler, I'm volatile and, you know, I can be changed by some XYZ that you're not even aware of." 
+    
+    --- Another 'volatile' example: 
+        volatile is needed if you are reading from a spot in memory that, say, a completely separate process/device/whatever may write to.
+        Example: a hardware managed 16 bit value as a semaphore to know when the other guy was done. 
+                Essentially we did this:
+                void waitForSemaphore()
+                {
+                    volatile uint16_t* semPtr = WELL_KNOWN_SEM_ADDR;/*well known address to my semaphore*/
+                    while ((*semPtr) != IS_OK_FOR_ME_TO_PROCEED);
+                }
+                Without volatile, the optimizer sees the loop as useless (The guy never sets the value! He's nuts, get rid of that code!) 
+                and my code would proceed without having acquired the semaphore, causing problems later on.
+
+
 ** explicit keyword
     - In C++, the compiler is allowed to make one implicit conversion to resolve the parameters to a function. 
       What this means is that the compiler can use single parameter constructors to convert from one type to another in order to get the right type for a parameter. 
@@ -22,7 +59,7 @@
         The parameter is not a Foo object, but an int. However, there exists a constructor for Foo 
         that  takes an int so this constructor can be used to convert the parameter to the correct type.
         The compiler is allowed to do this once for each parameter.
-    - *** Prefixing the explicit keyword to the constructor prevents the compiler from using that constructor for implicit conversions. 
+    *** Prefixing the explicit keyword to the constructor prevents the compiler from using that constructor for implicit conversions. 
         Adding it to the above class will create a compiler error at the function call DoBar (42). It is now necessary to call for conversion explicitly with DoBar (Foo (42))
         The reason you might want to do this is to avoid accidental construction that can hide bugs. 
         
