@@ -1,3 +1,62 @@
+* Object lifetime:
+   struct A {
+      A() { ... }
+      ~A() { ... }
+   };
+   struct B {
+      B() { ... }
+      ~B() { ... }
+   }
+   
+   struct C {
+      A a;
+      B b;
+   }
+   
+   An object's life ends are the exact reverse of the start of object's life
+    The sequence of above example:
+      A() ==>  B() ==> ~B() ==> ~A()
+
+* Rule of three
+   - a rule of thumb in C++:
+      if a class defines one of the following it should probably explicitly define all three:
+         * destructor
+         * copy constructor
+         * copy assignment operator
+   Example:
+   
+   class A {
+   public:
+      A(int sz) { sz_ = sz; v = new B[sz_]; }
+      ~A() { delete[] v; }       // don't add 'virtual' if there is no intent to use it as base class
+   private:
+      A(const A&);               // disable the default copy ctor
+      A& operator=(const A&);    // diable the default copy assignment operator
+      
+      B* v;
+      int sz_;
+   }
+         
+* ALWAYS write the member initializer in the order they are defined      
+         
+* Use the member initialzier list to initialize an object.
+  class A {
+  public:
+      A(int sz) { sz_= sz; v= new B[sz_]; }   // More expensive than initializer list:
+                                             // ** init to default values then assign to member variable
+                                               // [Better]:  A(int sz): sz_(sz), v(new B[sz]) {}
+  private:
+      int sz_;
+      B* v;
+   }
+
+   
+
+* virtual function:
+   - a function or method whose behavior can be overridden within an inheriting class by a function with the same signature.
+   - vtable: basically a jump table for function calls
+             with that, you can override functions when doing class inheritance
+
 * C++'s memory model
    struct X {
       int a;
