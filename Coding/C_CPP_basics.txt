@@ -1,3 +1,255 @@
+* Object lifetime:
+   struct A {
+      A() { ... }
+      ~A() { ... }
+   };
+   struct B {
+      B() { ... }
+      ~B() { ... }
+   }
+   
+   struct C {
+      A a;
+      B b;
+   }
+   
+   An object's life ends are the exact reverse of the start of object's life
+    The sequence of above example:
+      A() ==>  B() ==> ~B() ==> ~A()
+
+* Rule of three
+   - a rule of thumb in C++:
+      if a class defines one of the following it should probably explicitly define all three:
+         * destructor
+         * copy constructor
+         * copy assignment operator
+   Example:
+   
+   class A {
+   public:
+      A(int sz) { sz_ = sz; v = new B[sz_]; }
+      ~A() { delete[] v; }       // don't add 'virtual' if there is no intent to use it as base class
+   private:
+      A(const A&);               // disable the default copy ctor
+      A& operator=(const A&);    // diable the default copy assignment operator
+      
+      B* v;
+      int sz_;
+   }
+         
+* ALWAYS write the member initializer in the order they are defined      
+         
+* Use the member initialzier list to initialize an object.
+  class A {
+  public:
+      A(int sz) { sz_= sz; v= new B[sz_]; }   // More expensive than initializer list:
+                                             // ** init to default values then assign to member variable
+                                               // [Better]:  A(int sz): sz_(sz), v(new B[sz]) {}
+  private:
+      int sz_;
+      B* v;
+   }
+
+   
+
+* virtual function:
+   - a function or method whose behavior can be overridden within an inheriting class by a function with the same signature.
+   - vtable: basically a jump table for function calls
+             with that, you can override functions when doing class inheritance
+
+* C++'s memory model
+   struct X {
+      int a;
+      char b;
+      int c;
+      void foo();
+      int bar();
+   };
+   
+   sizeof(X):  12
+   
+   *** Adding non-virtual member functions does not change the size of struct/class
+   - The object does not know about the non-virtual member function.
+     It's the functions that know about the object.
+     
+   - Rewrite to C:
+      struct X {
+         int a;
+         char b;
+         int c;
+      };
+     
+      void foo(struct X* this);
+      int bar(struct X* this);
+      
+   - If there's one or more virtual functions in member functions, then add
+     a pointer size to the struct/class size (64bit machine: 8 bytes, 32bit: 4bytes)
+      * the pointer points to a virtual table
+
+
+* Why static variables are set to 0, but auto variables are not initialized?
+   - The cost of setting auto variables to 0 would increase the cost of function call.
+     C has very strong focus on execution speed.
+   - Memsetting the global data segment to 0, however, is one-time cost that happens at startup
+   - C++: static varabile are not set to 0, they are set to their default values: for native types means 0.
+
+* linker visibility 
+   int a;                  // what's the diff btwn "static int a" and "int a"?
+   void foo() {
+      printf("%d\n", a);
+   }
+
+   A: both are statically allocated and set to 0 initially.
+      The diff is *linker visibility*. If it's "static int a", a is visible to the local compile unit, not visible through the linker.
+         * 'int a' means other object file can have access to the variable.
+
+** Sequence points
+   - You can only update a variable once between sequence points
+   - Example:
+      a = a++;    // a is undefined!
+                  // because a would be updated twice.
+
+* struct's word alignment
+   struct X { int a; char b; int c; };
+   
+   sizeof(X):  12    // usual case
+      * it depends on the compiler flag such as -fpack-struct (gcc), it could be 9 (4+1+4)
+   
+   Why padding (e.g., 12 in this case)?
+      - because it's very expensive to work on sub-word data types, so compiler optimizes to make sure that
+        C aligns to word boundary by padding.
+         * why expensive? because the instruction set of most processors are optimized for moving a word data between CPU and memory.
+         * If only part of word is needed, you need to read word and mask out the value
+         * If the data is cross the boundary, you need to read two words and mask out the value
+
+   struct Y { int a; char b; char c; int d; }      // sizeof(): 12
+   
+   struct Z { int a; char* p; }     // pointer on 32-bit machine is usually 4 bytes, 8 bytes on 64-bit one
+
+
+* size_t
+      - 32bit: unsigned int
+      - 64bit: unsigned long
+      - C99: printf("%zu", sizeof(..));      // portable
+
+** Call stack
+   - a stack data structure that stores information about the active subroutines of a computer program.
+   - stack winding: adding a subroutine entry
+     stack unwinding: remove subroutine entry
+     
+** Evaluation order of most expression in C/C++ are unspecified.
+   - The compiler can choose to evaluate them in the order that it thinks is most optimal
+   - Example:
+         int a = foo() + bar();  
+         // not necessary that foo() runs first then bar()
+
+*** C memory model
+   - static storage
+   - automatic storage
+   - allocated storage (by calloc(), melloc())
+
+
+** static storage
+   - lifetime: entire execution of program
+   void foo() {
+      static int a;           // *** static variable is initialized to 0
+      a++;
+      printf("%d\n", a);
+   }
+   
+   int main() {
+      foo();
+      foo();
+      foo();
+   }
+   
+   // output:  
+   1
+   2
+   3
+   
+   If changes foo() to 
+   void foo() {
+      static int a = 3;          
+      a++;
+      printf("%d\n", a);
+   }
+   
+   // output:
+   3
+   4
+   5
+
+** volatile keyword
+    *** volatile is a hint to the implementation to avoid aggressive optimization involving the object because the value of the object might be changed by means undetectable by an implementation
+        
+    
+    int some_int = 100;
+
+    while(some_int == 100) {
+        //your code
+    }
+    
+    When this program gets compiled, the compiler may optimize this code, if it finds that the program never ever makes any attempt to change the value of some_int, 
+    so it may be tempted to optimize the while loop by changing it from while(some_int == 100) to simply while(true) 
+    so that the execution could be fast (since the condition in while loop appears to be true always).
+    
+    However, sometimes, optimization may be undesirable, because it may be that someone else is changing the value of some_int from outside the program 
+    which compiler is not aware of, since it can't see it; but it's how you've designed it. 
+    In that case, compiler's optimization would not produce the desired result!
+    
+    So, to ensure the desired result, you need to somehow stop the compiler from optimizing the while loop. That is where the volatile keyword plays it's role. All you need to do is this,
+        volatile int some_int = 100; 
+        
+    volatile tells the compiler that,
+        "Hey compiler, I'm volatile and, you know, I can be changed by some XYZ that you're not even aware of." 
+    
+    --- Another 'volatile' example: 
+        volatile is needed if you are reading from a spot in memory that, say, a completely separate process/device/whatever may write to.
+        Example: a hardware managed 16 bit value as a semaphore to know when the other guy was done. 
+                Essentially we did this:
+                void waitForSemaphore()
+                {
+                    volatile uint16_t* semPtr = WELL_KNOWN_SEM_ADDR;/*well known address to my semaphore*/
+                    while ((*semPtr) != IS_OK_FOR_ME_TO_PROCEED);
+                }
+                Without volatile, the optimizer sees the loop as useless (The guy never sets the value! He's nuts, get rid of that code!) 
+                and my code would proceed without having acquired the semaphore, causing problems later on.
+
+
+** explicit keyword
+    - In C++, the compiler is allowed to make one implicit conversion to resolve the parameters to a function. 
+      What this means is that the compiler can use single parameter constructors to convert from one type to another in order to get the right type for a parameter. 
+      Here's an example class with a constructor that can be used for implicit conversions:
+        class Foo
+        {
+        public:
+            // single parameter constructor, can be used as an implicit conversion
+            Foo (int foo) : m_foo (foo) { }
+            int GetFoo () { return m_foo; }
+        private:
+            int m_foo;
+        };
+        Here's a simple function that takes a Foo object:
+        void DoBar (Foo foo) {
+            int i = foo.GetFoo ();
+        }
+        and here's where the DoBar function is called.
+            int main () {
+                DoBar (42);
+            }
+        The parameter is not a Foo object, but an int. However, there exists a constructor for Foo 
+        that  takes an int so this constructor can be used to convert the parameter to the correct type.
+        The compiler is allowed to do this once for each parameter.
+    *** Prefixing the explicit keyword to the constructor prevents the compiler from using that constructor for implicit conversions. 
+        Adding it to the above class will create a compiler error at the function call DoBar (42). It is now necessary to call for conversion explicitly with DoBar (Foo (42))
+        The reason you might want to do this is to avoid accidental construction that can hide bugs. 
+        
+        Contrived example:
+            You have a MyString(int size) class with a constructor that constructs a string of the given size. 
+            You have a function print(MyString&), and you call it with print(3). 
+            You expect it to print "3", but it prints an empty string of length 3 instead.
+
 class
     - a way of encapsulating data
     - a way of defining abstract data types along with initialization conditions and operations allowed on that data

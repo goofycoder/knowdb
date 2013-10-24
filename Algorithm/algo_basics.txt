@@ -1,3 +1,16 @@
+Disjoint set:
+	- two sets are disjoint if they have no element in common. 
+	- For example, {1, 2, 3} and {4, 5, 6} are disjoint sets.
+	- A disjoint-set data structure is a data structure that keeps track of a set of elements partitioned into a number of disjoint (non-overlapping) subsets. 
+
+Union-Find algorithm
+	- an algorithm that performs two useful operations on such a data structure
+	- Find: 
+		* Determine which subset a particular element is in. 
+		* This can be used for determining if two elements are in the same subset.
+	- Union: 
+		* Join two subsets into a single subset.
+
 threaded binary tree
 	- "A binary tree is threaded
 		* all right child pointers that would normally be null point to the inorder successor of the node
