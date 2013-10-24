@@ -1,19 +1,48 @@
+* C++'s memory model
+   struct X {
+      int a;
+      char b;
+      int c;
+      void foo();
+      int bar();
+   };
+   
+   sizeof(X):  12
+   
+   *** Adding non-virtual member functions does not change the size of struct/class
+   - The object does not know about the non-virtual member function.
+     It's the functions that know about the object.
+     
+   - Rewrite to C:
+      struct X {
+         int a;
+         char b;
+         int c;
+      };
+     
+      void foo(struct X* this);
+      int bar(struct X* this);
+      
+   - If there's one or more virtual functions in member functions, then add
+     a pointer size to the struct/class size (64bit machine: 8 bytes, 32bit: 4bytes)
+      * the pointer points to a virtual table
+
+
 * Why static variables are set to 0, but auto variables are not initialized?
    - The cost of setting auto variables to 0 would increase the cost of function call.
      C has very strong focus on execution speed.
    - Memsetting the global data segment to 0, however, is one-time cost that happens at startup
    - C++: static varabile are not set to 0, they are set to their default values: for native types means 0.
 
-* linker visibility
+* linker visibility 
+   int a;                  // what's the diff btwn "static int a" and "int a"?
+   void foo() {
+      printf("%d\n", a);
+   }
 
-int a;                  // what's the diff btwn "static int a" and "int a"?
-void foo() {
-   printf("%d\n", a);
-}
-
-A: both are statically allocated and set to 0 initially.
-   The diff is *linker visibility*. If it's "static int a", a is visible to the local compile unit, not visible through the linker.
-      * 'int a' means other object file can have access to the variable.
+   A: both are statically allocated and set to 0 initially.
+      The diff is *linker visibility*. If it's "static int a", a is visible to the local compile unit, not visible through the linker.
+         * 'int a' means other object file can have access to the variable.
 
 ** Sequence points
    - You can only update a variable once between sequence points
