@@ -1,6 +1,71 @@
-** static variable
+* Why static variables are set to 0, but auto variables are not initialized?
+   - The cost of setting auto variables to 0 would increase the cost of function call.
+     C has very strong focus on execution speed.
+   - Memsetting the global data segment to 0, however, is one-time cost that happens at startup
+   - C++: static varabile are not set to 0, they are set to their default values: for native types means 0.
+
+* linker visibility
+
+int a;                  // what's the diff btwn "static int a" and "int a"?
+void foo() {
+   printf("%d\n", a);
+}
+
+A: both are statically allocated and set to 0 initially.
+   The diff is *linker visibility*. If it's "static int a", a is visible to the local compile unit, not visible through the linker.
+      * 'int a' means other object file can have access to the variable.
+
+** Sequence points
+   - You can only update a variable once between sequence points
+   - Example:
+      a = a++;    // a is undefined!
+                  // because a would be updated twice.
+
+* struct's word alignment
+   struct X { int a; char b; int c; };
+   
+   sizeof(X):  12    // usual case
+      * it depends on the compiler flag such as -fpack-struct (gcc), it could be 9 (4+1+4)
+   
+   Why padding (e.g., 12 in this case)?
+      - because it's very expensive to work on sub-word data types, so compiler optimizes to make sure that
+        C aligns to word boundary by padding.
+         * why expensive? because the instruction set of most processors are optimized for moving a word data between CPU and memory.
+         * If only part of word is needed, you need to read word and mask out the value
+         * If the data is cross the boundary, you need to read two words and mask out the value
+
+   struct Y { int a; char b; char c; int d; }      // sizeof(): 12
+   
+   struct Z { int a; char* p; }     // pointer on 32-bit machine is usually 4 bytes, 8 bytes on 64-bit one
+
+
+* size_t
+      - 32bit: unsigned int
+      - 64bit: unsigned long
+      - C99: printf("%zu", sizeof(..));      // portable
+
+** Call stack
+   - a stack data structure that stores information about the active subroutines of a computer program.
+   - stack winding: adding a subroutine entry
+     stack unwinding: remove subroutine entry
+     
+** Evaluation order of most expression in C/C++ are unspecified.
+   - The compiler can choose to evaluate them in the order that it thinks is most optimal
+   - Example:
+         int a = foo() + bar();  
+         // not necessary that foo() runs first then bar()
+
+*** C memory model
+   - static storage
+   - automatic storage
+   - allocated storage (by calloc(), melloc())
+
+
+** static storage
+   - lifetime: entire execution of program
    void foo() {
       static int a;           // *** static variable is initialized to 0
+      a++;
       printf("%d\n", a);
    }
    
@@ -14,6 +79,18 @@
    1
    2
    3
+   
+   If changes foo() to 
+   void foo() {
+      static int a = 3;          
+      a++;
+      printf("%d\n", a);
+   }
+   
+   // output:
+   3
+   4
+   5
 
 ** volatile keyword
     *** volatile is a hint to the implementation to avoid aggressive optimization involving the object because the value of the object might be changed by means undetectable by an implementation
