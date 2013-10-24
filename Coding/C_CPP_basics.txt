@@ -1,3 +1,20 @@
+** static variable
+   void foo() {
+      static int a;           // *** static variable is initialized to 0
+      printf("%d\n", a);
+   }
+   
+   int main() {
+      foo();
+      foo();
+      foo();
+   }
+   
+   // output:  
+   1
+   2
+   3
+
 ** volatile keyword
     *** volatile is a hint to the implementation to avoid aggressive optimization involving the object because the value of the object might be changed by means undetectable by an implementation
         
