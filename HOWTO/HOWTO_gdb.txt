@@ -29,7 +29,8 @@ $gdb -q <symbol_file>
 
 //print
 (gdb) p *struct_ptr
-(gdb) p/x variable	        // hex.
+(gdb) p/x variable	        // hex
+(gdb) p/t variable          // print binary
 (gdb) p/d variable	        // Signed integer.
 (gdb) p/u variable	        // unsigned integer.
 (gdb) p/c variable	        // char
