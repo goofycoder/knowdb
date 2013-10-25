@@ -1,3 +1,13 @@
+* Floating number representation
+   - Floating numbers are, in general, represented approximately to a fixed number of significant digits (the mantissa) 
+     and scaled using an exponent. 
+   - 32-bit representation:
+    seeeeeeeemmmmmmmmmmmmmmmmmmmmmmm    meaning
+    31       22                    0    bit #
+      s = sign bit (1)
+      e = exponent (8)
+      m = mantissa (23)
+
 * Object lifetime:
    struct A {
       A() { ... }
