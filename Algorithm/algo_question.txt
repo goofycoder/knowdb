@@ -1,0 +1,11 @@
+Q: Have a huge file that cannot fit into memory. Each line has a string. How to sort the file?
+
+A: Extenal sort. (Disk-based sorting)
+   Assume the file is N. The available memory is M.
+  
+   Idea: 
+    1. Divide the file into K chunks, where M * K = N. 
+       Bring each chunk into memory and sort the lines as usual using any O(n log n) algorithm. 
+       Save the lines back to the file.
+    2. Now bring the next chunk into memory and sort.
+    3. (K-way merge) Once we’re done, merge them one by one.
