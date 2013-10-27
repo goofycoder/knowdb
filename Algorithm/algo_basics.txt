@@ -17,6 +17,11 @@ T_Node	{
 	max_data_in_arr;
 }
 
+k-d tree (short for k-dimensional tree) 
+	- a space-partitioning data structure for organizing points in a k-dimensional space. 
+	- k-d trees are a useful data structure for several applications, such as searches involving a multidimensional search key (e.g. range searches and nearest neighbor searches). 
+	- k-d trees are a special case of binary space partitioning trees.
+
 T-tree's balance
 	- T-tree balanced like an AVL tree
 	- it becomes out of balance when a node's child trees differ in height by at least two levels. This can happen after an insertion or deletion of a node. After an insertion or deletion, the tree is scanned from the leaf to the root. If an imbalance is found, one tree rotation or pair of rotations is performed, which is guaranteed to balance the whole tree.
@@ -34,9 +39,18 @@ AVL tree (Adelson-Velskii and Landis' tree, named after the inventors)
 
 AVL tree vs Red-black tree
 	- AVL trees are often compared with red-black trees because both support the same set of basic operations and take O(log n) time
+	- Both AVL trees and red-black trees are self-balancing binary search trees and they are very similar mathematically.
+	- AVL trees are more rigidly balanced than red-black trees, leading to slower insertion and removal but faster retrieval.
 	- For lookup-intensive applications, AVL trees are faster than red-black trees because they are more rigidly balanced.
 	- Similar to red-black trees, AVL trees are height-balanced but in general not weight-balanced
 		* sibling nodes can have hugely differing numbers of descendants.
+
+splay tree 
+	- a self-adjusting binary search tree with the additional property that recently accessed elements are quick to access again. 
+	- It performs basic operations such as insertion, look-up and removal in O(log n) amortized time.
+	- Frequently accessed nodes will move nearer to the root where they can be accessed more quickly. 
+	- When a node x is accessed, a splay operation is performed on x to move it to the root.
+	
 
 Disjoint set:
 	- two sets are disjoint if they have no element in common. 
