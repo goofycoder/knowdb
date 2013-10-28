@@ -1,3 +1,10 @@
+Hash table basics:
+	- load factor: 
+		* the number of entries divided by the number of buckets 
+	- load factor = (n/k) 
+		* n is the number of entries(keys) 
+		* k is the number of buckets.
+
 Examples of non-cryptographic hash function
 	- MurmurHash:
 		- a non-cryptographic hash function suitable for general hash-based lookup
