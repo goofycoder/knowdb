@@ -1,3 +1,22 @@
+Suffix tree
+	- a compressed trie containing all the suffixes of the given string.
+	- it means I could determine if the word BANANAS was in the collected works of William Shakespeare by performing just 7 character comparisons. 
+	  * Of course, we also need to consider the time to construct the trie.
+
+Suffix tree construction:
+	- Linear suffix tree construction by *path compression* (Ukkonen's algorithm) 
+		- Starts with an empty tree, then progressively adds each of the N prefixes of T to the suffix tree. 
+			* For example, when creating the suffix tree for BANANAS, B is inserted into the tree, then BA, then BAN, and so on. When BANANAS is finally inserted, the tree is complete.
+		- constructing one requires O(N) time and space
+	- *path compression* 
+		- individual edges in the tree now may represent sequences of text instead of single characters.
+	- the reduction in the number of nodes by path compression leads to 
+		* the time and space requirements for constructing a suffix tree are reduced from O(N^2) to O(N)
+	- Worst case, a suffix tree can be built with a maximum of 2N nodes, where N is the length of the input text.
+		
+Trie
+	- A trie is a type of tree that has N possible branches from each node, where N is the number of characters in the alphabet. 
+
 T-tree
 	- a type of binary tree data structure that is widely used by main-memory databases
 		* such as Datablitz, EXtremeDB, MySQL Cluster, Oracle TimesTen and MobileLite
