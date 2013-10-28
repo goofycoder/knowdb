@@ -13,6 +13,19 @@ Suffix tree construction:
 	- the reduction in the number of nodes by path compression leads to 
 		* the time and space requirements for constructing a suffix tree are reduced from O(N^2) to O(N)
 	- Worst case, a suffix tree can be built with a maximum of 2N nodes, where N is the length of the input text.
+
+Ukkonen's algorithm: Linear Suffix tree construction
+	// http://stackoverflow.com/questions/9452701/ukkonens-suffix-tree-algorithm-in-plain-english?rq=1
+	// http://marknelson.us/1996/08/01/suffix-trees/
+	- Algorithm begins with an implicit suffix tree containing the first character of the string. Then it steps through the string adding successive characters until the tree is complete. 
+	* Example: 
+		- when creating the suffix tree for BANANAS, 
+		    * insert_to_tree("B") 
+		    * insert_to_tree("BA")
+		    * insert_to_tree("BAN") and so on. 
+		    * When "BANANAS" is finally inserted, the tree is complete.
+	- This order addition of characters gives Ukkonen's algorithm its "on-line" property.
+
 		
 Trie
 	- A trie is a type of tree that has N possible branches from each node, where N is the number of characters in the alphabet. 
