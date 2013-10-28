@@ -1,3 +1,27 @@
+List
+	- (Pro) Lists are good when you are likely to touch only the extremes of the list: near tail, or near head. 
+	- (Con) Lists are not very good to paginate stuff, because random access is slow, O(N). So good uses of lists are plain queues and stacks, or processing items in a loop using RPOPLPUSH with same source and destination to "rotate" a ring of items.
+	- (Pro) Lists are also good when we want just to create a capped collection of N items where usually we access just the top or bottom items, or when N is small.
+
+Zip List (Redis)
+	- A Zip List is like a doubly linked list, except it does not use pointers and stores the data inline. 
+	- Each node in a doubly linked list has at 3 pointers
+		* one forward pointer
+		* one backward pointer
+		* one pointer to reference the data stored at that node. 
+		- Pointers require memory (8 bytes on a 64 bit system)
+			* so for small lists, a doubly linked list is very inefficient.
+	- A Zip List stores elements sequentially in a Redis String. 
+		* Each element in Zip List 
+			* a small header that stores the length and data type of the element, 
+			* the offset to the next element and 
+			* the offset to the previous element. 
+				- These offsets replace the forward and backward pointers. 
+				  Since the data is stored inline, we don't need a data pointer.
+	- Finding an element in the skip list O(n). 
+	- Inserting a new element requires reallocating memory. 
+	     * Because of this, Redis uses this encoding only for small lists, hashes and sorted sets
+
 Suffix tree
 	- a compressed trie containing all the suffixes of the given string.
 	- it means I could determine if the word BANANAS was in the collected works of William Shakespeare by performing just 7 character comparisons. 
