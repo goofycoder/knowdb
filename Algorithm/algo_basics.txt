@@ -1,9 +1,17 @@
+Examples of non-cryptographic hash function
+	- MurmurHash:
+		- a non-cryptographic hash function suitable for general hash-based lookup
+		- used in Redis, nginx, memcached
+	- SipHash
+
+
 Collision in Hash Table
 	- One of the biggest problems with hash tables are collisions. 
 	  * They yeild a worst case performance of O(N), require constant re-hashing, and can be attack vectors
 	- DoS attack caused by forced hash collison:
 	   - hash key to the same bucket into an hash table in order to turn the O(1) expected time (the average time) to the O(N) worst case, consuming more CPU than expected, and ultimately causing a DoS. 
 	   - To prevent this specific attack, Redis uses a per-execution pseudo-random seed to the hash function.
+	   	* but still seed-independent collisions exist!
 
 List
 	- (Pro) Lists are good when you are likely to touch only the extremes of the list: near tail, or near head. 
