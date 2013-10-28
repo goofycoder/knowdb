@@ -1,3 +1,13 @@
+Q: Is there a way to measure how sorted a list is? 
+  I mean, it's not about knowing if a list is sorted or not (boolean), but something like a ratio of "sortness", 
+  something like the coefficient of correlation in statistics.
+A: You can simply count the number of inversions in the list.
+   Inversion: An inversion in a sequence of elements of type T is a pair of sequence elements that appear out of order 
+   according to some ordering < on the set of T's.
+   Example sequence 9, 5, 7, 6. 
+      - This sequence has the inversions (0,1), (0,2), (0,3), (2,3) and the inversion number 4.
+
+========================================================================================
 Q: Have a huge file that cannot fit into memory. Each line has a string. How to sort the file?
 
 A: Extenal sort. (Disk-based sorting)
