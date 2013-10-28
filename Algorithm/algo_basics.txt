@@ -1,3 +1,16 @@
+Skip list 
+	- a data structure for storing a sorted list of items using a hierarchy of linked lists that connect increasingly sparse subsequences of the items. 
+	- These auxiliary lists allow item lookup with efficiency comparable to balanced binary search trees 
+	  (that is, with number of probes proportional to log n instead of n).
+	- A skip list is built in layers. 
+	   * The bottom layer is an ordinary ordered linked list. 
+	   * Each higher layer acts as an "express lane" for the lists below
+	   * where an element in layer i appears in layer i+1 with some fixed probability p 
+	     (two commonly used values for p are 1/2 or 1/4).
+	- skip list search
+	   * A search for a target element begins at the head element in the top list
+	   * It proceeds horizontally until the current element is greater than or equal to the target. 
+
 Hash table basics:
 	- load factor: 
 		* the number of entries divided by the number of buckets 
