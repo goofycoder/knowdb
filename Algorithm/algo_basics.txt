@@ -1,3 +1,10 @@
+Collision in Hash Table
+	- One of the biggest problems with hash tables are collisions. 
+	  * They yeild a worst case performance of O(N), require constant re-hashing, and can be attack vectors
+	- DoS attack caused by forced hash collison:
+	   - hash key to the same bucket into an hash table in order to turn the O(1) expected time (the average time) to the O(N) worst case, consuming more CPU than expected, and ultimately causing a DoS. 
+	   - To prevent this specific attack, Redis uses a per-execution pseudo-random seed to the hash function.
+
 List
 	- (Pro) Lists are good when you are likely to touch only the extremes of the list: near tail, or near head. 
 	- (Con) Lists are not very good to paginate stuff, because random access is slow, O(N). So good uses of lists are plain queues and stacks, or processing items in a loop using RPOPLPUSH with same source and destination to "rotate" a ring of items.
