@@ -1,3 +1,14 @@
+Dijkstra's algorithm
+	- is a graph search algorithm that solves the single-source shortest path problem for a graph with non-negative edge path costs
+		* producing a shortest path tree. 
+	- This algorithm is often used in routing and as a subroutine in other graph algorithms.
+	- For a given source vertex (node) in the graph, the algorithm finds the path with lowest cost 
+	  (i.e. the shortest path) between that vertex and every other vertex. 
+	- It can also be used for finding costs of shortest paths from a single vertex to a single destination vertex by stopping the algorithm once the shortest path to the destination vertex has been determined. 
+	  * For example, if the vertices of the graph represent cities and edge path costs represent driving distances between pairs of cities connected by a direct road, 
+	    Dijkstra's algorithm can be used to find the shortest route between one city and all other cities. 
+	    As a result, the shortest path first is widely used in network routing protocols, most notably IS-IS and OSPF (Open Shortest Path First).
+
 Skip list 
 	- a data structure for storing a sorted list of items using a hierarchy of linked lists that connect increasingly sparse subsequences of the items. 
 	- These auxiliary lists allow item lookup with efficiency comparable to balanced binary search trees 
