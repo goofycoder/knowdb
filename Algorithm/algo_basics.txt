@@ -1,3 +1,33 @@
+Best-first search 
+	- a search algorithm which explores a graph by expanding the most promising node chosen according to a specified rule.
+	- Best-first search estimates the promise of node n by a "heuristic evaluation function  which, in general, may depend on the description of n, the description of the goal, 
+	  the information gathered by the search up to that point, and most important, on any extra knowledge about the problem domain.
+
+A* search
+	- uses a best-first search and finds a least-cost path from a given initial node to one goal node (out of one or more possible goals). 
+	- As A* traverses the graph, it follows a path of the lowest expected total cost or distance, keeping a sorted priority queue of alternate path segments along the way.	
+	- It uses a knowledge-plus-heuristic cost function of node x (usually denoted f(x)) to determine the order in which the search visits nodes in the tree. 
+	- The cost function is a sum of two functions:
+		* the past path-cost function: the known distance from the starting node to the current node x (usually denoted g(x))
+		* a future path-cost function: an admissible "heuristic estimate" of the distance from x to the goal (usually denoted h(x)).
+
+Breath-first search
+	- The algorithm uses *queue* to store intermediate results as it traverses the graph, as follows:
+		1. Enqueue the root node
+		2. Dueue a node and examine it
+		3. If the element sought is found in this node, quit the search and return a result.
+		4. Otherwise enqueue any successors (the direct child nodes) that have not yet been discovered.
+			- If the queue is empty, every node on the graph has been examined – quit the search and return "not found".
+			- If the queue is not empty, repeat from Step 2.
+	- * Using a stack instead of a queue would turn this algorithm into a depth-first search
+
+Beam search
+	- Heuristic search algorithm that explores a graph by expanding the most promising node in a limited set. 
+	- Beam search is an optimization of best-first search that reduces its memory requirements. 
+	- Best-first search is a graph search which orders all partial solutions (states) according to some heuristic which attempts to predict how close a partial solution is to a complete solution (goal state). 
+	- But in beam search, only a predetermined number of best partial solutions are kept as candidates
+
+
 Dijkstra's algorithm
 	- is a graph search algorithm that solves the single-source shortest path problem for a graph with non-negative edge path costs
 		* producing a shortest path tree. 
