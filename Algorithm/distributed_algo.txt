@@ -1,0 +1,30 @@
+Distributed algorithm 
+  - an algorithm designed to run on computer hardware constructed from interconnected processors. 
+  
+Distributed algorithms topics:
+  - leader election
+  - spanning tree generation
+  - consensus
+  - distributed search
+  - mutual exclusion
+  - resource allocation
+
+Leader Election (Symmetry breaking)
+  - the process of designating a single process as the organizer of some task distributed among several computers (nodes).
+  - The network nodes communicate among themselves in order to decide which of them will get into the "leader" state. 
+    For that, they need some method in order to break the symmetry among them. 
+       * For example, if each node has unique and comparable identities, then the nodes can compare their identities, 
+         and decide that the node with the highest identity is the leader.
+
+Spanning-tree generation
+  - Breadth-first search algorithm
+    * Mark nodes as they get incorporated into the tree.
+        - Initially, only i_0 is marked.
+    * Round 1: i_0 sends search message to out-neighbors.
+    * At every round: 
+        - An unmarked node that receives a search message:
+        - Marks itself.
+        - Designates one process from which it received search as its parent.
+        - Sends search to out-neighbors at the next round.
+    * Yields a BFS tree because all the branches are created synchronously.
+  - Complexity: Time = diam + 1; Messages = |E|

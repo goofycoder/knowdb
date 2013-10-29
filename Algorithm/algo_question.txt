@@ -1,0 +1,41 @@
+Q: Is there a way to measure how sorted a list is? 
+  I mean, it's not about knowing if a list is sorted or not (boolean), but something like a ratio of "sortness", 
+  something like the coefficient of correlation in statistics.
+A: You can simply count the number of inversions in the list.
+   Inversion: An inversion in a sequence of elements of type T is a pair of sequence elements that appear out of order 
+   according to some ordering < on the set of T's.
+   Example sequence 9, 5, 7, 6. 
+      - This sequence has the inversions (0,1), (0,2), (0,3), (2,3) and the inversion number 4.
+
+========================================================================================
+Q: Have a huge file that cannot fit into memory. Each line has a string. How to sort the file?
+
+A: Extenal sort. (Disk-based sorting)
+   Assume the file is N. The available memory is M.
+  
+   Idea: 
+    1. Divide the file into K chunks, where M * K = N. 
+       Bring each chunk into memory and sort the lines as usual using any O(n log n) algorithm. 
+       Save the lines back to the file.
+    2. Now bring the next chunk into memory and sort.
+    3. (K-way merge) Once we’re done, merge them one by one.
+
+========================================================================================
+Q: Given a pile of n pairs of socks, containing 2n elements (assume each sock has exactly one matching pair), 
+   what is the best way to pair them up efficiently with up to logarithmic extra space?
+A: Sorting solutions have been proposed but sorting is a little too much: 
+   We don't need order, we just need equality groups.
+   
+   Hashing would be enough (and faster).
+   Algorithm:
+      step 1: For each color of socks, form a pile. Iterate over all socks in your input basket and distribute them onto the color piles.
+      step 2: Iterate over each pile and distribute it by some other metric (e.g. pattern) into a second set of piles.
+      step 3: Recursively apply this scheme until you have distributed all socks onto very small piles that you can visually process immediately
+   
+   This kind of recursive hash partitioning is actually being done by SQL Server when it needs to hash join or hash aggregate over huge data sets. It distributes its build input stream into many partitions which are independent. This scheme scales to arbitrary amounts of data and multiple CPUs linearly.
+   You don't need recursive partitioning if you can find a distribution key (hash key) that provides enough buckets that each bucket is small enough to be processed very quickly. Unfortunately, I don't think socks have such a property.
+   If each sock had an integer called "PairID" one could easily distribute them into 10 buckets according to PairID % 10 (the last digit).
+   * The best real-world partitioning I can think of is creating a rectangle of piles: one dimension is color, the other is pattern. 
+      Why a rectangle? Because we need O(1) random-access to piles. 
+      (A 3D cuboid would also work, but that is not very practical.)
+
