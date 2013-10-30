@@ -1,3 +1,16 @@
+Q: Suppose you have a long list of numbers and you want to find the 5th and 95th percentiles.
+A: To make the problem tangible, suppose we have a 1000 numbers and we want to know 
+   what the 50th number would be if we were to sort the list in increasing order. 
+   Imagine we want to do this using as little memory as possible. We could read in the first 50 numbers and put into max-heap.
+   Then when we read in the 51st number, we compare it to the largest of the 50 numbers we've saved (heap root). 
+   If the new number is larger, we throw it away because we know it cannot be the 50th smallest number of the full list. 
+   If the new number is smaller, we throw away the largest number we were keeping and insert the new number into heap.
+   
+   Same for the 95th percentile (only 5% of N numbers are needed).
+  
+    Same as you want to know N_th smallest/largest number of an infinite stream.
+
+==============================================================================================
 Q: Is there a way to measure how sorted a list is? 
   I mean, it's not about knowing if a list is sorted or not (boolean), but something like a ratio of "sortness", 
   something like the coefficient of correlation in statistics.
