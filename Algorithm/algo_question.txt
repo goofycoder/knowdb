@@ -1,3 +1,4 @@
+
 Q: finding running median from streamed data
 A: Heap-based solution:
  
@@ -22,6 +23,17 @@ At any given time you can calculate median like this:
      median = (root of maxHeap + root of minHeap)/2
    Else
      median = root of the heap with more elements
+
+Finding running median from a stream of data is a tough problem, and finding an exact solution with 
+memory constraints efficiently is probably impossible for the general case.  On the other hand, if 
+the data has some characteristics we can exploit, we can develop efficient specialized solutions. 
+For example, if we know that the data is an integral type, then we can use counting sort, 
+which can give you a constant memory constant time algorithm. 
+
+Heap based solution is a more general solution because it can be used for other data types (doubles) as well. 
+And finally, if the exact median is not required and an approximation is enough, you can just try to estimate 
+a probability density function for the data and estimate median using that.
+
 
 ============================================================================================
 Q: Suppose you have a long list of numbers and you want to find the 5th and 95th percentiles.
