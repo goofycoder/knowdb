@@ -1,3 +1,6 @@
+Taxicab metric: (also known as rectilinear distance, city block distance, Manhattan distance, or Manhattan length)
+	- http://en.wikipedia.org/wiki/Rectilinear_distance
+
 Bloom filter 
 	-a space-efficient probabilistic data structure that is used to test whether an element is a member of a set.
 	- False positive matches are possible, but false negatives are not; 
