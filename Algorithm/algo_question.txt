@@ -1,3 +1,16 @@
+Q: Area of the union of rectangles [Sweep Line Algorith] 
+  Given a set of axis-aligned rectangles, what is the area of their union? 
+
+A: Like the line-intersection problem, we can handle this by dealing with *events* and *active sets*. 
+   Each rectangle has two events: left edge and right edge. When we cross the left edge, the rectangle is added to the active set. 
+   When we cross the right edge, it is removed from the active set.
+   
+   We now know which rectangles are cut by the sweep line (red in the diagram), 
+   but we actually want to know the length of sweep line that is cut (the total length of the solid blue segments). Multiplying this length by the horizontal distance between events gives the area swept out between those two events.
+
+   http://community.topcoder.com/tc?module=Static&d1=tutorials&d2=lineSweep
+
+=======================================================================================================
 Q: [Closest pair] 
 Given a set of points, find the pair that is closest (with either metric). 
 
