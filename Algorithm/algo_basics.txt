@@ -8,6 +8,11 @@ Bloom filter
 	        * With unlimited core memory, an error-free hash could be used to eliminate all the unnecessary disk access. 
 		* But if core memory was insufficient, a smaller hash area could be used to eliminate most of the unnecessary access. 
 		* For example, a hash area only 15% of the error-free size would still eliminate 85% of the disk accesses (Bloom (1970)).
+	- Example:
+		* The Google Chrome web browser uses a Bloom filter to identify malicious URLs.
+		* Any URL is first checked against a local Bloom filter 
+		* only upon a hit a full check of the URL is performed.
+
 
 Bloom filter implementation
 	- An empty Bloom filter is a bit array of m bits, all set to 0. 
