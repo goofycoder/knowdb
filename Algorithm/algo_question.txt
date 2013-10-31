@@ -1,3 +1,22 @@
+Q: [Closest pair] 
+Given a set of points, find the pair that is closest (with either metric). 
+
+A: Line sweep algorithm:
+
+   This can be solved in O(N2) time by considering all the pairs, but a line sweep can reduce this to O(N log N).
+   Suppose that we have processed points 1 to N − 1 (ordered by X) and the shortest distance we have found so far is h. 
+   We now process point N and try to find a point closer to it than h. We maintain a set of all already-processed points 
+   whose X coordinates are within h of point N. 
+   As each point is processed, it is added to the set, and when we move on to the next point or when h is decreased, points are removed from the set. 
+   ** The set is ordered by y coordinate. 
+   
+   A balanced binary tree is suitable for this, and accounts for the log N factor.
+   
+   Become a range search problem:
+      - To search for points closer than h to point N, we need only consider points in the active set
+      - furthermore we need only consider points whose y coordinates are in the range yN − h to yN + h
+
+========================================================================
 Q: Assume that we have N workers and N jobs that should be done. For each pair (worker, job) 
    we know salary that should be paid to worker for him to perform the job. 
    Our goal is to complete all jobs minimizing total inputs, while assigning each worker to exactly one job and vice versa.
