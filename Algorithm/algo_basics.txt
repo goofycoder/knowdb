@@ -1,3 +1,21 @@
+Minimum Spanning Tree algorithms for graphs 
+	- (e.g., Prim's algorithm) can compute the MST in O((E + N) log N) time for E edges.
+	-  Prim's algorithm is a greedy algorithm that finds a minimum spanning tree for a connected weighted undirected graph. 
+	   This means it finds a subset of the edges that forms a tree that includes every vertex, where the total weight of all the edges in the tree is minimized. 
+
+Prim's algorithm:
+	* The algorithm starts with a tree consisting of a single vertex, and continuously increases its size one edge at a time, until it spans all vertices.
+	Input: A non-empty connected weighted graph with vertices V and edges E (the weights can be negative).
+	Initialize: V_new = {x}, where x is an arbitrary node (starting point) from V, E_new = {}
+		   Repeat until V_new = V:
+	1. Choose an edge {u, v} with minimal weight such that u is in Vnew and v is not (if there are multiple edges with the same weight, any of them may be picked)
+	2. Add v to V_new, and {u, v} to E_new
+	Output: V_new and E_new describe a minimal spanning tree
+	
+Kruskal's algorithm 
+	- a greedy algorithm in graph theory that finds a minimum spanning tree for a connected weighted graph. 
+	  This means it finds a subset of the edges that forms a tree that includes every vertex, where the total weight of all the edges in the tree is minimized. 
+
 Taxicab metric: (also known as rectilinear distance, city block distance, Manhattan distance, or Manhattan length)
 	- http://en.wikipedia.org/wiki/Rectilinear_distance
 
