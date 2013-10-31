@@ -1,3 +1,35 @@
+Bloom filter 
+	-a space-efficient probabilistic data structure that is used to test whether an element is a member of a set.
+	- False positive matches are possible, but false negatives are not; 
+		- i.e. a query returns either "possibly in set" or "definitely not in set". 
+		- Elements can be added to the set, but not removed (though this can be addressed with a "counting" filter). The more elements that are added to the set, the larger the probability of false positives.
+	- Bloom proposed the technique for applications where the amount of source data would require an impracticably large hash area in memory if "conventional" error-free hashing techniques were applied. 
+	      Example:  a dictionary of 500,000 words, of which 90% could be hyphenated by following simple rules but all the remaining 50,000 words required expensive disk access to retrieve their specific patterns. 
+	        * With unlimited core memory, an error-free hash could be used to eliminate all the unnecessary disk access. 
+		* But if core memory was insufficient, a smaller hash area could be used to eliminate most of the unnecessary access. 
+		* For example, a hash area only 15% of the error-free size would still eliminate 85% of the disk accesses (Bloom (1970)).
+
+Bloom filter implementation
+	- An empty Bloom filter is a bit array of m bits, all set to 0. 
+	- There must also be k different hash functions defined
+		* each maps or hashes some set element to one of the m array positions with a uniform random distribution.
+	- Add element:
+		*feed the element to each of the k hash functions to get k array positions. Set the bits at all these positions to 1.
+	- Search elemen (test whether it is in the set)
+		* feed the element to each of the k hash functions to get k array positions. 
+		* If any of the bits at these positions are 0, the element is definitely not in the set – if it were, then all the bits would have been set to 1 when it was inserted. If all are 1, then either the element is in the set, or the bits have by chance been set to 1 during the insertion of other elements, resulting in a false positive. 
+
+Bloom filter (Pros and Cons)
+	- Space: 
+		* Bloom filters have a strong space advantage over other data structures for representing sets
+		  - such as self-balancing binary search trees, tries, hash tables, or simple arrays or linked lists of the entries. 
+		  ** Most of these require storing at least the data items themselves
+		  	- which can require anywhere from a small number of bits, for small integers, to an arbitrary number of bits, such as for strings 
+		  	(tries are an exception, since they can share storage between elements with equal prefixes).
+		  - Linked structures incur an additional linear space overhead for pointers.
+	- Cons: If the number of potential values is small and many of them can be in the set
+		* the Bloom filter is easily surpassed by the deterministic bit array, which requires only one bit for each potential element.
+
 Red-black Trees
 	- Red-black trees are an evolution of binary search trees that aim to keep the tree balanced without affecting the complexity of the primitive operations. 
 	- This is done by coloring each node in the tree with either red or black and 
