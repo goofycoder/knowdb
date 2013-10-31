@@ -34,18 +34,12 @@ B+ tree Deletion
 	  If merge occurred, must delete entry (pointing to L or sibling) from parent of L. 
 	  Merge could propagate to root, decreasing height.
 
-How index speeds the search
+How index speeds the search?
 	- Initial disk reads narrowed the search range by a factor of two. 
 	- That can be improved substantially by creating an auxiliary index that contains the first record in each disk block (sometimes called a sparse index). 
 	- This auxiliary index would be 1% of the size of the original database, but it can be searched more quickly. 
 	- Finding an entry in the auxiliary index would tell us which block to search in the main database; 
-	  after searching the auxiliary index, we would have to search only that one block of the main database — at a cost of one more disk read.
-
-
-
-
-
-
+	  after searching the auxiliary index, we would have to search only that one block of the main database.
 
 Best-first search 
 	- a search algorithm which explores a graph by expanding the most promising node chosen according to a specified rule.
