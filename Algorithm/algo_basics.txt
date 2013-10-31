@@ -1,3 +1,52 @@
+B+ tree
+	-  B+ tree is an n-ary tree with a variable but often large number of children per node.
+	- B+ tree consists of a root, internal nodes and leaves
+	- The primary value of a B+ tree is in storing data for efficient retrieval in a block-oriented storage context - in particular, filesystems. 
+	- This is primarily because unlike binary search trees, B+ trees have very high fanout 
+		* (number of pointers to child nodes in a node,typically on the order of 100 or more)
+		* which reduces the number of I/O operations required to find an element in the tree.
+
+B+ tree search
+	- The root of a B+ Tree represents the whole range of values in the tree, where every internal node is a subinterval.
+	- An internal B+ Tree node has at most b children, where every one of them represents a different sub-interval. 
+	- If the table had 1,000,000 (1M) records, then a specific record could be located with at most 20 comparisons.  2^20 = 1M
+	
+B+ tree insert
+	- Perform a search to determine what bucket the new record should go into.
+	- If (the bucket is not full (at most b - 1 entries after the insertion)) 
+		add the record.
+	  else 
+	  	split the bucket.
+		* Allocate new leaf and move half the bucket's elements to the new bucket.
+		* Insert the new leaf's smallest key and address into the parent.
+		* If the parent is full, split it too. Add the middle key to the parent node. 
+		* Repeat until a parent is found that need not split.
+	- If the root splits, create a new root which has one key and two pointers. 
+	  (That is, the value that gets pushed to the new root gets removed from the original node)
+
+B+ tree Deletion
+	- Start at root, find leaf L where entry belongs.
+	- Remove the entry.
+	- If L is at least half-full, done! 
+	- If L has fewer entries than it should, 
+	  Try to re-distribute, borrowing from sibling (adjacent node with same parent as L).
+	- If re-distribution fails, merge L and sibling. 
+	  If merge occurred, must delete entry (pointing to L or sibling) from parent of L. 
+	  Merge could propagate to root, decreasing height.
+
+How index speeds the search
+	- Initial disk reads narrowed the search range by a factor of two. 
+	- That can be improved substantially by creating an auxiliary index that contains the first record in each disk block (sometimes called a sparse index). 
+	- This auxiliary index would be 1% of the size of the original database, but it can be searched more quickly. 
+	- Finding an entry in the auxiliary index would tell us which block to search in the main database; 
+	  after searching the auxiliary index, we would have to search only that one block of the main database — at a cost of one more disk read.
+
+
+
+
+
+
+
 Best-first search 
 	- a search algorithm which explores a graph by expanding the most promising node chosen according to a specified rule.
 	- Best-first search estimates the promise of node n by a "heuristic evaluation function  which, in general, may depend on the description of n, the description of the goal, 
