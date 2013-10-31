@@ -1,3 +1,10 @@
+Q: Assume that we have N workers and N jobs that should be done. For each pair (worker, job) 
+   we know salary that should be paid to worker for him to perform the job. 
+   Our goal is to complete all jobs minimizing total inputs, while assigning each worker to exactly one job and vice versa.
+
+A: Assignment Problem and Hungarian Algorithm 
+   http://community.topcoder.com/tc?module=Static&d1=tutorials&d2=hungarianAlgorithm
+
 ====================================================================
 Q: An array with all the numbers from 1 to N, where N is at most 32,000. 
 The array may have duplicate entries and you do not know what N is. With only 4KB of memory available, 
