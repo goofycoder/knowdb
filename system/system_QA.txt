@@ -1,0 +1,5 @@
+Q: Is memcpy() thread-safe?
+A: No, memcpy is typically made for speed. If you need thread-safe memcpy(), put it in the critical section guarded by mutex.
+    lock(&mutex);
+    memcpy(dst, src, count);
+    unlock(&mutex);
