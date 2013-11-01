@@ -1,3 +1,38 @@
+Open Shortest Path First (OSPF) 
+    - a link-state routing protocol for Internet Protocol (IP) networks. 
+    - an interior gateway protocol that routes IP packets solely within a single routing domain         
+        * routine domain: Autonomous System.
+    - OSPF:
+        - gathers link state information from available routers 
+        - constructs a topology map of the network. 
+        - The topology determines the routing table presented to the Internet Layer
+            * makes routing decisions based solely on the destination IP address found in IP packets. 
+     
+OSPF vs IS-IS vs BGP    
+    - OSPF: the most widely used interior gateway protocol (IGP) in large enterprise networks. 
+    - IS-IS, another link-state dynamic routing protocol, is more common in large service provider networks. 
+    - Border Gateway Protocol (BGP): The most widely used exterior gateway protocol 
+        * the principal routing protocol between autonomous systems on the Internet.
+
+
+TCP
+    - Error detection
+        * checksum
+    - Flow control
+        * sliding window flow control protocol
+        * In each TCP segment, the receiver specifies in *receive window* field the amount of additionally 
+          received data (in bytes) that it is willing to buffer for the connection. 
+        * Sending host can send only up to that amount of data before it must wait for ACK and window update from            the receiving host
+        * silly window syndrome
+            - If a receiver is processing incoming data in small increments, it may repeatedly advertise a small
+              receive window.
+            - Inefficient to send only a few bytes of data in a TCP segment
+                * given the relatively large overhead of the TCP header.
+    - Congestion Control
+        * Modern implementations of TCP contain four intertwined algorithms: 
+            - Slow-start, congestion avoidance, fast retransmit, and fast recovery
+
+
 HTTP cookie (also known as web cookie, browser cookie) 
     - small piece of data sent from a website  
     - stored in a user's web browser while the user is browsing that website. 
