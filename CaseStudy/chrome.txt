@@ -1,14 +1,17 @@
-
 Chrome Network Architecture in a Nutshell
     - uses a multi-process architecture, which isolates render processes from the browser process.
-    - maintains a single instance of the resource dispatcher, which is shared across all render processes, and runs within the browser kernel process.
-    - The network stack is a cross-platform, mostly single-threaded library.
-    - The network stack uses non-blocking operations to manage all network operations.
-    - Shared network stack allows efficient resource prioritization, reuse, and provides the browser with ability to perform global optimization across all running processes.
+    - maintains a single instance of the resource dispatcher
+        * shared across all render processes, 
+        * runs within the browser kernel process.
+    - Network stack 
+        * a cross-platform, mostly single-threaded library.
+        * uses non-blocking operations to manage all network operations.
     - Each render process communicates with the resource dispatcher via IPC.
     - Resource dispatcher intercepts resource requests via a custom IPC filter.
     - Predictor intercepts resources request and response traffic to learn and optimize future network requests.
-    - Predictor may speculatively schedule DNS, TCP, and even resource requests based on learned traffic patterns, saving hundreds of milliseconds when the navigation is triggered by the user.
+    - Predictor may speculatively schedule DNS, TCP, and even resource requests 
+        * based on learned traffic patterns
+        * saving hundreds of milliseconds when the navigation is triggered by the user.
 
 Chrome works on a multi-process model
     - provides process and memory isolation
@@ -20,11 +23,11 @@ Internal cache in Chrome:
     - two different implementations of the internal cache
         * local disk 
             - stored within a single cache folder for your profile
-            - disk cache maintains a Least Recently Used (LRU) cache that takes into account ranking metrics such as frequency of access and resource age.
-        * memory.
+            - disk cache maintains a Least Recently Used (LRU) cache 
+                * based on ranking metrics such as frequency of access and resource age.
+        * memory
     
-DNS pre-resolution is treated as a hint.    
- 
+  
 desktop Chrome browsers use the process-per-site model
     - that isolates different sites from each other
     - but groups all instances of the same site into the same process.     
@@ -33,49 +36,77 @@ With an allocated process, the execution of a web program primarily involves thr
     1 fetching resources 
     2 page layout and rendering (Blink)
     3 JavaScript execution.  (V8 JavaScript)
-        (Task 2 & 3 follows single-threaded, interleaved model of execution: JavaScript is a single-threaded language)
+        - Task 2 & 3 follows single-threaded, interleaved model of execution)
+        - JavaScript is a single-threaded language)
         
 Chrome’s network stack 
-    - trying to hide or decrease the latency cost of each resource: 
-        * it learns likely DNS lookups
-        * it remembers the topology of the web
-        * it pre-connects to likely destination targets
-        * etc
+    - try to hide or decrease the latency cost of each resource: 
+        * learns likely DNS lookups
+        * remembers the topology of the web
+        * pre-connects to likely destination targets
         
 Behind the scene when given the URL of a resource on the web
-    - Browser starts by checking its local and application caches. 
-        * If you have previously fetched the resource and the appropriate cache headers were provided (Expires, Cache-Control, etc.), 
-          then it is possible that we are allowed to use the local copy to fulfill the request–the fastest request is a request not made. 
-        * Alternatively, if we have to revalidate the resource, if it expired, or if we simply have not seen it before, then a costly network request must be dispatched.
+    1 Local Cache lookup
+        Browser starts by checking its local and application caches. 
+        * If you have previously fetched the resource and the appropriate cache headers were provided 
+          (Expires, Cache-Control, etc.), 
+        * it is possible that browser uses the local copy to fulfill the request
+            - the fastest request is a request not made. 
+        * Alternatively if
+            - resource needs to be revalidated
+            - resoruce expired, or 
+            - simply have not seen the resource before
+          then a costly network request must be dispatched.
+    2 DNS lookup
+        * resolve IP address
+        * Optimization: DNS pre-fetching (treat as hint)
+            - Chrome's own implementation of an asynchronous DNS resolver.
+    3 TCP handshake
+        * SYN > SYN-ACK > ACK
+        * adds a full round-trip of latency delay to each and every new TCP connection–no shortcuts
+        * server response does not fit into the initial TCP congestion window (4-15 KB)
+            - then one or more additional round-trips of latency is introduced.
+        * Optimization: TCP preconnect
+    4 SSL handshake
+        * add up to two additional round-trips of latency delay between client and server
+        * If the SSL session is cached, then we can “escape” with just one additional round-trip.
+        * SSL delays could get even worse if 
+            - need to fetch a missing certificate or 
+            - perform an online certificate status check (OCSP)
+                * both require an entirely new TCP connection
+    5 dispatch HTTP request
+        Optimization
+            * Sub-Resource 
+                
+            * prefetch
+                - a link resource specifies its relationship as "prefetch"
+                    * an indication to the browser that this resource might be needed in a future navigation. 
+                - considered low priority 
+                    * might be downloaded by the browser only once the current page has finished loading.
+    6. Page rendering
+        * Optimization: prerender
 
-Chrome remembers the top ten most likely hostnames accessed by the user following the browser start
-    - inspect your own startup hostname list by opening a new tab and navigating to chrome://dns
-
+TCP preconnect
+    1. check Chrome's socket pools 
+        * see if there is an available socket for the hostname
+    2. Reuse if there is keep-alive socket
+        * keep-alive sockets are kept in the pool for some period of time
+        * to avoid the TCP handshake and slow-start penalties. 
+    3. If no socket is available, then it can initiate the TCP handshake, and place it in the pool. 
+        * when the user initiates the navigation, the HTTP request can be dispatched immediately.
 Predictor        
     - Chrome gets faster as you use it. 
-    - This feat is accomplished with the help of a singleton Predictor object, which is instantiated within the browser kernel process, and whose sole responsibility is to observe network patterns and to learn and anticipate likely user actions in the future.
-       
+    - This is accomplished with the help of a singleton Predictor object
+    - Predictor is 
+        * instantiated within the browser kernel process
+        * observe network patterns and to learn and anticipate likely user actions in the future.
+
+Trivia about chrome
+    * Chrome remembers the top ten most likely hostnames accessed by the user following the browser start
+        - inspect your own startup hostname list by opening a new tab and navigating to chrome://dns
+        
+    
 mobile Chrome 
     - use lazy closing of idle sockets–sockets are closed only when opening new ones to minimize radio use.        
-        
-DNS lookup
-        
-TCP handshake
 
-SSL handshake
-
-dispatch HTTP request        
-
-With the resolved IP address in hand, Chrome can now open a new TCP connection to the destination, which means that we must perform the “three-way handshake”: SYN > SYN-ACK > ACK. 
-This exchange adds a full round-trip of latency delay to each and every new TCP connection–no shortcuts. 
-Depending on the distance between the client and the server, as well as the chosen routing path, this can yield from tens to hundreds, or even thousands, of milliseconds of delay. All of this work and latency is before even a single byte of application data has hit the wire.
-
-
-
-
-Once the TCP handshake is complete, and if we are connecting to a secure destination (HTTPS), then the SSL handshake must take place. This can add up to two additional round-trips of latency delay between client and server. If the SSL session is cached, then we can “escape” with just one additional round-trip.
-
-
-- If the server response does not fit into the initial TCP congestion window (4-15 KB), then one or more additional round-trips of latency is introduced.
-- SSL delays could get even worse if we need to fetch a missing certificate or perform an online certificate status check (OCSP), both of which will require an entirely new TCP connection, which can add hundreds and even thousands of milliseconds of additional latency.
 
