@@ -1,5 +1,33 @@
+Two models to handle concurrency
+    - these two models permit high-performance implementations that can use multiple CPUs and sharing of resources
+    - 1. "threads + mutexes + condition-variables"
+      2. "threads + message-passing". 
+       *** These two can be used together, and often are.
+    - Both models allow high-throughput implementations, and both can suffer from both races and deadlocks. 
+        * Deadlocks can often be eliminated in the message-passing model by using unbounded queues and/or threadpools
+
+Message passing
+    - Associate data with threads, so that each thread owns some variables and data structures
+        *a variable is accessed only by its owning thread.
+    - Other threads wishing to access the data then communicate with the owning thread via message passing
+
+When to use?
+    * message-passing model tends to work well when 
+        - there is a natural resource that already serializes accesses (such as an I/O device)
+        - a linear state machine best expressed as a single routine, or 
+        - when critical sections are long. 
+    * Mutexes work well when 
+        - critical sections are short and may be invoked in many places, 
+        - or when reader-writer locks can be used effectively. 
+
+co-operative multithreading 
+	- allows the programmer to use multiple threads on a single CPU. 
+	- The scheduler guarantees
+	    * no two threads can run concurrently
+	    * never to pre-empt a thread that has not blocked.
+
 Message passing 
-    - a form of communication used in concurrent computing, parallel computing, object-oriented programming, and interprocess communication. 
+    - a form of communication used in concurrent computing, parallel computing, object-oriented programming, and IPC. 
     - By waiting for messages, processes can also synchronize.
 
 Thread or process synchronization [or serialization]
@@ -21,15 +49,21 @@ Lock:
 
 Disadvantage of locks:
     - Lock-based resource protection and thread/process synchronization have many disadvantages:
-        * Cause blocking, which means some threads/processes have to wait until a lock (or a whole set of locks) is released.
-        * Lock handling adds overhead for each access to a resource, even when the chances for collision are very rare. (However, any chance for such collisions is a race condition.)
-        * Locks can be vulnerable to failures and faults that are often very subtle and may be difficult to reproduce reliably. 
-            - One example is the deadlock, where (at least) two threads each hold a lock that the other thread holds and will not give up until it has acquired the other lock.
-        * If one thread holding a lock dies, stalls/blocks or goes into any sort of infinite loop, other threads waiting for the lock may wait forever.
+        * Cause blocking:
+            - some threads/processes have to wait until a lock (or a whole set of locks) is released.
+        * Lock handling adds overhead for each access to a resource, even when the chances for collision are very rare. 
+             (However, any chance for such collisions is a race condition.)
+        * Locks can be vulnerable to failures and faults that are often very subtle and difficult to reproduce reliably.
+            - Example: deadlock
+        * If one thread holding a lock dies, stalls/blocks or goes into any sort of infinite loop
+            0 other threads waiting for the lock may wait forever.
         * Lock contention limits scalability and adds complexity.
-        * Priority inversion. High priority threads/processes cannot proceed, if a low priority thread/process is holding the common lock.
-        * Convoying. All other threads have to wait, if a thread holding a lock is descheduled due to a time-slice interrupt or page fault.
-        * Hard to debug: Bugs associated with locks are time dependent. They are extremely hard to replicate.
+        * Priority inversion. 
+            - High priority threads cannot proceed, if a low priority thread/process is holding the common lock.
+        * Convoying. 
+            - All threads have to wait, if a thread holding lock is descheduled due to time-slice interrupt/page fault.
+        * Hard to debug: 
+            - Bugs associated with locks are time dependent. They are extremely hard to replicate.
 
 Funnel
     - a funnel is a synchronization primitive used in kernel development to protect system resources.
@@ -45,13 +79,15 @@ Serializing tokens
     
 Spinlock
     - A spinlock is a lock where the thread simply waits ("spins") until the lock becomes available. 
-    - Pro: very efficient if threads are only likely to be blocked for a short period of time, as it avoids the overhead of operating system process re-scheduling. 
+    - Pro: 
+        * very efficient if threads are only likely to be blocked for a short period of time
+        * as it avoids the overhead of operating system process re-scheduling. 
     - Con: It is wasteful if the lock is held for a long period of time.
 
 Race Condition
     - anything where the outcome depends on the relative ordering of execution of operations on two or more threads
         * timing sensitive
-    - race conditions typically occur where completing an operation requires modification of two or more distinct pieces of data
+    - typically occur where completing an operation requires modification of two or more distinct pieces of data
         * such as the two link pointers in the linked list. 
     - Because the operation must access two separate pieces of data, these must be modified in separate instructions
       and another thread could potentially access the data structure when only one of them has been completed
@@ -66,6 +102,31 @@ Avoid race condition
         * handle the updates to the data structure as a transaction
         * just as updates to a database are done within a transaction.
         * The required series of data modifications and reads is stored in a transaction log and then committed in a single step.
+
+==================================== Deadlock =================================================
+Deadlock
+    - occurs when an activity
+        * attempts to acquire a limited resource that has been exhausted and 
+        * cannot be replenished unless that activity makes progress.
+
+Self-deadlock
+    - The simplest mutex-related deadlock is the self-deadlock: 
+        mu.Acquire();
+        mu.Acquire();      // BUG: deadlock: thread already holds mu
+  
+Two-mutex deadlock
+    - occurs when thread T0 attempts to acquire M1 while holding M0 at the same time that thread T1 attempts to acquire M0 while holding M1; each thread will wait indefinitely for the other.
+
+Deadlock debug/avoidance
+    - Among the easiest bugs to debug and avoid. 
+    - Debugging is typically easy because the address space stops exactly where the bug occurs. 
+    - A stack trace of threads is usually all required to see what threads are waiting for and what resources they hold.
+
+Deadlocks Avoidance
+    - disallow cycles in the resources' exhaust-before graph
+        * by imposing a partial order on the graph. 
+ 
+=================================================================================================
 
 Mutex in C++0x
     - basic operations
