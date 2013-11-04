@@ -1,3 +1,15 @@
+Avoid locking
+    - The best way to avoid locking is to avoid shared mutable state. 
+    - When shared mutable state is needed, use a mutex. 
+    - If you experience lock contention, consider using more mutexes, each protecting less data 
+    	(that is, make the locking finer-grained).
+    *** A particularly important rule of thumb for deadlock avoidance is never hold a lock while invoking a callback. 
+    
+Lock contention
+	- partitioning locked data structures to avoid lock contention. 
+	- For example, it is easier, more efficient, to build a high-concurrency hash table from many normal hash tables, 
+	  each with its own lock, than to build one lock-free hash table using atomic operations.
+
 Two models to handle concurrency
     - these two models permit high-performance implementations that can use multiple CPUs and sharing of resources
     - 1. "threads + mutexes + condition-variables"
@@ -25,6 +37,16 @@ co-operative multithreading
 	- The scheduler guarantees
 	    * no two threads can run concurrently
 	    * never to pre-empt a thread that has not blocked.
+
+Single thread: 
+	- A process that uses only a single thread requires no mutexes
+		*  Often best approach for simple programs that do not require high performance or are inherently sequential. 
+	- A single-threaded application can use only one CPU, which typically makes it far slower than other options
+		*  usually not the best choice for large programs, or when high performance is required.
+	- If application is simple enough, one may be able to run multiple copies of the same program on each machine, 
+	  but this introduces two inefficiencies: 
+	  	* cross-address-space context switches are more expensive than thread context switches because threads share TLB entries while address spaces do not; 
+	  	* the address space separation precludes sharing some resources (caches, ports, etc.).
 
 Message passing 
     - a form of communication used in concurrent computing, parallel computing, object-oriented programming, and IPC. 
