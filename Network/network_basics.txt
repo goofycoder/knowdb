@@ -1,3 +1,8 @@
+IP fragmentation
+    - Internet Protocol (IP) implements datagram fragmentation
+        * breaking IP datagram into smaller pieces 
+    - Packets may be formed that can pass through a link with a smaller maximum transmission unit (MTU) than the original datagram size.
+
 Open Shortest Path First (OSPF) 
     - a link-state routing protocol for Internet Protocol (IP) networks. 
     - an interior gateway protocol that routes IP packets solely within a single routing domain         
