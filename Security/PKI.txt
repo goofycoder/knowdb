@@ -33,7 +33,7 @@ Keywords
 =============================================
 
 ASyntax Notation One (ASN.1) 
-    - a standard and notation that describes rules and structures for representing, encoding and decoding data in computer networking
+    - standard notation that describes rules and structures for representing, encoding and decoding data in network
     - standard ASN.1 encoding rules include:
         * Basic Encoding Rules (BER)
         * Distinguished Encoding Rules (DER)
@@ -89,14 +89,16 @@ Structure of Digital Certificate
 
 Self-signed certificate (root certificates, top-level cert)
     - the issuer and subject are the same
-    - the highest-ranking CA's certificate can't be attested by some other higher CA (there being none), and so that certificate can only be "self-signed." 
+    - Highest-ranking CA's certificate can't be attested by some other higher CA (there being none)
+        * thus this CA certificate can only be "self-signed." 
     - Such certificates are also termed root certificates.
     - Self-signed certificates cannot (by nature) be revoked
-    - *usually stored by browsers 
-    - globally trusted certificate that can sign anything (as there are no constraints in 'Basic Constraints' section),
+        * usually stored by browsers 
+    - globally trusted certificate that can sign anything 
+        * (as there are no constraints in 'Basic Constraints' section)
 
 Certification Authority (CA) 
-    - issues a certificate binding a public key to a particular distinguished nam
+    - issues a certificate binding a public key to a particular distinguished name
     - indicate the revocation status of the certificates that they issue
         * by CRL, OCSP (Online Certificate Status Protocol), etc. 
         * CA is usually CRL issuer, but it can delegate this to different entity
@@ -118,5 +120,3 @@ Certificate revocation list (CRL).
 How to validate the certificate?
     - check the certificate signature and validity 
     - acquire a suitably recent CRL and checks that the certificate serial number is not on that CRL. 
-
-LDAP
