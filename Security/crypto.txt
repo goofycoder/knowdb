@@ -1,3 +1,45 @@
+SSL handshake
+  1.Server (but not Client) is authenticated by its certificate:
+    *** Negotiation phase:
+      - Client --> Server: sends a ClientHello message specifying 
+            * the highest TLS protocol version it supports
+            * a random number
+            * a list of suggested CipherSuites 
+            * suggested compression methods. 
+            * If the client is attempting to perform a resumed handshake, it may send a session ID.
+      - Server --> Client: responds with a ServerHello message specifying:
+            * chosen protocol version
+                - the highest that both the client and server support
+            * a random number
+            * CipherSuite
+            * compression method from the choices offered by the client. 
+            * Seeion ID (optional): to confirm or allow resumed handshakes 
+      - Server --> Client: Send server's Certificate message (OPTIONAL: depending on the selected cipher suite)
+      - Server --> Client: Send a ServerHelloDone message
+            * indicating it is done with handshake negotiation.
+      - Client --> Server: responds with a ClientKeyExchange message containing:
+            * may contain a PreMasterSecret, public key, or nothing. 
+                (Depends on the selected cipher.) 
+            * PreMasterSecret is encrypted using the public key of the server certificate.
+      - Client and Server:
+            * use the random numbers and PreMasterSecret to compute a common secret, called the "master secret". 
+            * All other key data for this connection is derived from this master secret 
+      - Client -The client now sends a ChangeCipherSpec record, essentially telling the server, "Everything I tell you from now on will be authenticated 
+            (and encrypted if encryption parameters were present in the server certificate)." 
+            The ChangeCipherSpec is itself a record-level protocol with content type of 20.
+      - Client --> Server:  sends an authenticated and encrypted Finished message, containing 
+            * a hash and MAC over the previous handshake messages.
+            * Server will attempt to decrypt the client's Finished message and verify the hash and MAC. 
+      - Finally, the server sends a ChangeCipherSpec, telling the client:
+            * "Everything I tell you from now on will be authenticated (and encrypted, if encryption was negotiated)."
+      - The server sends its authenticated and encrypted Finished message.
+        The client performs the same decryption and verification.
+    *** Application phase: 
+        - "handshake" is complete and the application protocol is enabled, with content type of 23. 
+        - Application messages exchanged between client and server will also be authenticated and optionally encrypted exactly like in Finished message. 
+        - Otherwise, the content type will return 25 and the client will not authenticate.
+
+
 IPSec
   - a protocol suite for securing IP communications by authenticating and encrypting each IP packet of communication session. 
   - can be used in protecting data flows between 
