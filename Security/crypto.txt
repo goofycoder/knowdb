@@ -1,3 +1,60 @@
+IPSec
+  - a protocol suite for securing IP communications by authenticating and encrypting each IP packet of communication session. 
+  - can be used in protecting data flows between 
+      * a pair of hosts (host-to-host)
+      * a pair of security gateways (network-to-network)
+      * a security gateway and a host (network-to-host)
+  - IKE daemon: runs in user space 
+    IPsec stack: in the kernel that processes the actual IP packets.
+
+IPsec protocol suite 
+  - IPsec uses the following protocols to perform various functions:
+    * Authentication Headers (AH): [protocol number 51] 
+      - provide connectionless integrity and data origin authentication for IP datagrams 
+      - provide protection against replay attacks
+        * sliding window
+    * Encapsulating Security Payloads (ESP):  [protocol number 50]
+      - provide:
+        * confidentiality
+        * data-origin authentication
+        * connectionless integrity
+        * anti-replay service (a form of partial sequence integrity)
+        * limited traffic-flow confidentiality
+    * Security Associations (SA) 
+      - provide the bundle of algorithms and data that provide the parameters necessary to AH and/or ESP operations. 
+      - Internet Security Association and Key Management Protocol (ISAKMP) provides 
+          * a framework for authentication and key exchange,
+          * with actual authenticated keying material provided by 
+            - manual configuration with pre-shared keys
+            - Internet Key Exchange (IKE and IKEv2)
+            - Kerberized Internet Negotiation of Keys (KINK)
+
+Internet Key Exchange (IKE or IKEv2) 
+  - the protocol used to set up a security association (SA) in the IPsec protocol suite
+  - use UDP packets [usually on port 500]
+  - generally requires 4-6 packets with 2-3 turn-around times to create an SA on both sides. 
+  - Negotiated key material is then given to the IPsec stack.
+
+security association (SA)
+  - Simply the bundle of algorithms and parameters (such as keys)
+  - used to encrypt and authenticate a particular flow in one direction. 
+  - in normal bi-directional traffic, the flows are secured by a pair of SAs
+
+IPSec mode
+  - host-to-host transport mode
+      * Only the payload of the IP packet is usually encrypted and/or authenticated. 
+      * Routing is intact, since the IP header is neither modified nor encrypted; 
+  - network tunnel mode
+      * entire IP packet is encrypted and/or authenticated. 
+      * then encapsulated into a new IP packet with a new IP header. 
+ 
+Hypertext Transfer Protocol Secure (HTTPS) 
+  - a communications protocol for secure communication over a computer network
+  - not a protocol in and of itself; simply layering HTTP on top of the SSL/TLS protocol
+      * add the security capabilities of SSL/TLS to standard HTTP communications.
+
+
+
 Two-factor authentication (2FA)
   - a way of logging into websites that requires more than just a password. Using a password to log into a website is susceptible to security threats, because it represents a single piece of information a malicious person needs to acquire. 
   - The added security that 2FA provides is requiring additional information to log in.
