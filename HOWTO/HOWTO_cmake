@@ -1,4 +1,25 @@
 =============================================================
+Q: How to link a dynamic library (.so) in CMake?
+A: Explain using example: link the pcap library. 
+         Assume the libpcap.so is located at /usr/local/lib/
+
+Two ways to do this:
+
+1) In src/CMakeList.txt, add /usr/local/lib/libpcap.so to
+target_link_libraries (
+  executable
+  /usr/local/lib/libpcap.so 
+)
+
+2) [PREFERED] Use 'find_library()'. Add the following to src/CMakeList.txt 
+find_library(PCAP_LIB NAMES pcap HINTS /usr/local/lib)    // PCAP_LIB is the user-defined name
+
+target_link_libraries (
+  executable
+  PCAP_LIB
+)
+
+=============================================================
 Q: How to enable symbols for GDB?
 
 A: cmake -DCMAKE_BUILD_TYPE=Debug <path>
