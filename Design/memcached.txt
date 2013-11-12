@@ -1,0 +1,4 @@
+Memcached
+  - in-memory key-value store for small chunks of arbitrary data (strings, objects) from results of database calls
+    API calls, or page rendering.
+  - intended for use in speeding up dynamic web applications by alleviating database load.
