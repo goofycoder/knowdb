@@ -1,0 +1,23 @@
+$free       // display free and used memory info 
+  -k        // in KB (Default)
+  -m        // in MB
+  -g        // in GB
+  
+  Refer to the link below for more info:
+  http://www.linuxatemyram.com/
+
+Related topics:
+  - Disk caching
+      * Linux is borrowing unused memory for disk caching
+      * clear disk cache:
+          - $echo 3 | sudo tee /proc/sys/vm/drop_caches 
+  - OOM killer (Out-Of-Memory Killer)
+
+===========================================================================
+$time [./a.out]
+
+Example output:
+
+real    0m0.139s      // Elapsed real time
+user    0m0.060s      // Total number of CPU-seconds that the process spent in user mode
+sys     0m0.028s      // Total number of CPU-seconds that the process spent in kernel mode
