@@ -1,3 +1,13 @@
+$fallocate      // f[ile] allocate:  How to create a large file
+  - preallocate blocks to a file
+    * For filesystems which support the fallocate system call, this is done quickly by 
+      allocating blocks and marking them as uninitialized, requiring no IO to the data blocks. 
+    * Much faster than creating a file by filling it with zeros.
+  - Example:
+    $fallocate -l 200M large.txt    // create a file called large.txt with the size of 200M
+      * -l  : length  K, M, G for various unit in size
+
+===========================================================================
 $free       // display free and used memory info 
   -k        // in KB (Default)
   -m        // in MB
