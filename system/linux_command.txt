@@ -26,11 +26,14 @@ Related topics:
 ===========================================================================
 $time [./a.out]
 
-Example output:
+  Example use:
+    $ fallocate -l 200M large.txt       // create a 200M large file
+    $ time cat large.txt > /dev/null    // write this file to /dev/null
 
-real    0m0.139s      // Elapsed real time
-user    0m0.060s      // Total number of CPU-seconds that the process spent in user mode
-sys     0m0.028s      // Total number of CPU-seconds that the process spent in kernel mode
+  Example Output:
+    real    0m0.139s      // Elapsed real time
+    user    0m0.060s      // Total number of CPU-seconds that the process spent in user mode
+    sys     0m0.028s      // Total number of CPU-seconds that the process spent in kernel mode
 
 ==========================================================================
 /dev/null or the null device 
