@@ -3,6 +3,8 @@ $nmap -sn 192.168.2.1/24
     * NOT to do a port scan after host discovery, and only print out the available hosts that responded to the scan.
 
 ========================================= Netstat ===============================
+Reference link: http://www.thegeekstuff.com/2010/03/netstat-command-examples/
+
 $netstat -pt    // list all the process/program that using TCP port
 Active Internet connections (w/o servers)
 Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name
