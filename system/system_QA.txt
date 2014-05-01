@@ -1,3 +1,10 @@
+=======================================================
+Translation lookaside buffer (TLB)
+    - a cache that memory management hardware uses to improve virtual address translation speed.
+    - All current desktop, laptop, and server processors include one or more TLBs in the memory management hardware
+    - it is nearly always present in any hardware that utilizes paged or segmented virtual memory.
+    - The operation of more common TLB implementations is using hash tables
+
 =========================================================
 memory locking: mlockall()
 
