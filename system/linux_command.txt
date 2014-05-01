@@ -1,3 +1,9 @@
+=========================================================
+// count the total lines in all files in a directory
+find . -name '*.*' | xargs wc -l
+
+==============================================================
+
 $fallocate      // f[ile] allocate:  How to create a large file
   - preallocate blocks to a file
     * For filesystems which support the fallocate system call, this is done quickly by 
