@@ -25,9 +25,7 @@ materialized view (also known as snapshot)
     - Materialized views, which store data based on remote tables, are also known as snapshots. 
         * A snapshot can be redefined as a materialized view.
 
-=============================== Index (Begin) =================================
-
-Index 
+### Index 
   - A data structure that improves the speed of data retrieval operations on a database table 
   - Cost of index
     * additional writes
@@ -35,27 +33,22 @@ Index
     * Updating a table with indexes takes more time than updating a table without (because the indexes also need an update). 
 	- should only create indexes on columns (and tables) that will be frequently searched against.
     
-Why index?
-  - Database softwares use indexing technology that enables *sub-linear* time lookup to improve performance
-  - as linear search is inefficient for large databases.
+  - Why index?
+    - Database softwares use indexing technology that enables *sub-linear* time lookup to improve performance
+    - as linear search is inefficient for large databases.
   
-Implementation of Index 
-  - can be implemented using a variety of data structures. 
-  - Popular index include balanced trees, B+ trees and hashes.
-  
-How index works?
-  - For example, we store the data in B-tree. 
-  - Initial disk reads narrowed the search range by a factor of two. 
-  - That can be improved substantially by creating an auxiliary index that contains the first record in each disk block (sometimes called a sparse index). 
-  - This auxiliary index would be 1% of the size of the original database, but it can be searched more quickly. 
-  - Finding an entry in the auxiliary index would tell us which block to search in the main database
-    after searching the auxiliary index, we would have to search only that one block of the main database
+  - Implementation of Index 
+    - can be implemented using a variety of data structures. 
+    - Popular index include balanced trees, B+ trees and hashes.
+  - How index works?
+    - For example, we store the data in B-tree. 
+    - Initial disk reads narrowed the search range by a factor of two. 
+    - That can be improved substantially by creating an auxiliary index that contains the first record in each disk block (sometimes called a sparse index). 
+    - This auxiliary index would be 1% of the size of the original database, but it can be searched more quickly. 
+    - Finding an entry in the auxiliary index would tell us which block to search in the main databas after searching the auxiliary index, we would have to search only that one block of the main database
     	* at a cost of one more disk read.
-  
-How to create index:
-  - SQL:  CREATE INDEX index_name ON table_name (column_name)
-
-================================== Index (end) =================================
+  - How to create index:
+    - SQL:  CREATE INDEX index_name ON table_name (column_name)
 
 Cardinality (Uniqueness) 
   - A measure of the "number of elements of the set". 
