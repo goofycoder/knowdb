@@ -1,11 +1,9 @@
-View 
-    - a virtual table representing the result of a database query. 
+### View 
+  - a virtual table representing the result of a database query. 
         * the *result set* of a stored query — or map-and-reduce functions — on the data
        * the database users can query just as they would a persistent database collection object. 
        * This pre-established query command is kept in the database dictionary. 
-    - contrast to the base table
-
-Views can provide advantages over tables:
+    - Views can provide advantages over tables:
     - View can represent a subset of the data contained in a table
     - view can limit the degree of exposure of the underlying tables to the outer world: 
         * a given user may have permission to query the view, while denied access to the rest of the base table
@@ -54,15 +52,14 @@ Cardinality (Uniqueness)
   - A measure of the "number of elements of the set". 
   - For example, the set A = {2, 4, 6} contains 3 elements, and therefore A has a cardinality of 3.
 
-Sharding
+### Sharding
   - A database shard is a horizontal partition in a database or search engine. 
   - Each individual partition is referred to as a shard or database shard.
   - Horizontal partitioning is a database design principle whereby rows of a database table are held separately
-		* rather than being split into columns (which is what normalization and vertical partitioning do)
-	- Each partition forms part of a shard, which may in turn be located on a separate database server or physical location.
-	
-Sharding example:
-  - If range-based scheme: split:
+    * rather than being split into columns (which is what normalization and vertical partitioning do)
+  - Each partition forms part of a shard, which may in turn be located on a separate database server or physical location.
+  - Sharding example:
+    - If range-based scheme: split:
   	* A-H  ==> shard_0
   	* I-Z  ==> shard_1
   - downside: disk I/O
